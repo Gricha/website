@@ -40,7 +40,7 @@ I will say however, it's really nice that (compared with sandboxes in the next s
 
 ## Sandbox
 
-This is how I **actually** run agents for my work. And not only agents, I just run multiple of these for my own development.
+This is how I **actually** run agents for my work. And not only agents, I run multiple of these for my own development.
 
 It's docker.
 
@@ -56,16 +56,16 @@ npm install -g @subroutinecom/workspace
 
 The aim of this tool is to reproduce the dev environment in as simple way as possible with a bunch of common tools in somewhat opinionated way.
 
-The concept is dead simple - the CLI spins up a container for you, clones the repository of your choice, and tries it's darnest to make it resemble your original workspace as closely as possible. It doesn't use devcontainers, nix, or anything requiring specialized knowledge - it's just a simple CLI, and a few bash scripts. But to be useful it supports a bunch of important things out of the box
+The concept is dead simple - the CLI spins up a container for you, clones the repository of your choice, and tries it's darnest to make it resemble your original workspace as closely as possible. It doesn't use devcontainers, nix, or anything requiring specialized knowledge - it's just a simple CLI and a few bash scripts. But to be useful it supports a bunch of important things out of the box
 
 - Docker-in-docker
   - Starts up common `buildkitd` container to ensure cache sharing between containers, your hard drive will thank you
-- Clones private repositories (it either ssh-agent forwards, or straight up copies your ssh keys) from host
+- Clones private repositories (it either ssh-agent forwards, or copies your ssh keys) from host
 - Installs a bunch of tools you might need
   - Claude Code, OpenCode, Codex, aws-cli, docker, neovim
-- It exposes SSH port so you can straight up connect VSCode RemoteSSH to it and it'll work just fine
-- It volume mounts your home directory in readonly mode, so you just have access to it if you need to fix something up
-- Allows you to define any shell bootstrap scripts you need to make sure your thing works from the get go (for example, I have an entire script that just syncs and preconfigures oh-my-zsh + powerlevel10k on start)
+- It exposes SSH port so you can connect VSCode RemoteSSH to it and it'll work fine
+- It volume mounts your home directory in readonly mode, so you have access to it if you need to fix something up
+- Allows you to define any shell bootstrap scripts you need to make sure your thing works from the get go (for example, I have an entire script that syncs and preconfigures oh-my-zsh + powerlevel10k on start)
   - ~/.workspaces/userscripts for your personal stuff
   - colocated project-specific bootstrap scripts
 
@@ -73,9 +73,9 @@ The concept is dead simple - the CLI spins up a container for you, clones the re
 
 These workspaces can persist over time, or you can tear them down whenever. I end up just running a few of persistent ones and bring up/take down new ones as I need them.
 
-`workspace start alpha` will get me a workspace named `alpha`. With it I can do a few things out of the box. Each workspace on creation is assigned a persistent SSH port, so in VSCode, using RemoteSSH, I can just add hosts as `localhost:2222` (or whatever post it has been assigned). Or I can run `workspace shell alpha` and kick off NeoVim directly on the container.
+`workspace start alpha` will get me a workspace named `alpha`. With it I can do a few things out of the box. Each workspace on creation is assigned a persistent SSH port, so in VSCode, using RemoteSSH, I can add hosts as `localhost:2222` (or whatever post it has been assigned). Or I can run `workspace shell alpha` and kick off NeoVim directly on the container.
 
-In this example I just run my main workspace directly in VSCode. The terminals each run a Codex instance on a separate workspace. Each of these are fully isolated.
+In this example I run my main workspace directly in VSCode. The terminals each run a Codex instance on a separate workspace. Each of these are fully isolated.
 
 <video controls width="100%" className="rounded-lg my-6">
   <source src="/videoVscode.mp4" type="video/mp4" />
@@ -106,9 +106,9 @@ I still didn't solve all friction points that I want. For instance, credential s
 
 ### Rationale
 
-The big appeal of full sandbox is that I can just let the agent completely loose there in a --yolo mode. It will have all the tools and all the code for itself and full, free reign. And no other agent will interfere. I've been using this setup for a few months now and it's been delightful. The open source version is what I've created for the purpose of my original talk, but I'm slowly migrating last bits of functionality to it, and using it full time now.
+The big appeal of full sandbox is that I can let the agent completely loose there in a --yolo mode. It will have all the tools and all the code for itself and full, free reign. And no other agent will interfere. I've been using this setup for a few months now and it's been delightful. The open source version is what I've created for the purpose of my original talk, but I'm slowly migrating last bits of functionality to it, and using it full time now.
 
-I think lots of this eventually may end up moving to web with tools like Claude Code web, at least for the coding agent. I do find the tool to be super useful _just_ as a development environments. I oftentimes find myself going into one of the workspaces not to run an agent, but just to do some work on isolated copy of my env when I don't wanna stash changes somewhere else and still want full ecosystem running.
+I think lots of this eventually may end up moving to web with tools like Claude Code web, at least for the coding agent. I do find the tool to be super useful as a development environment. I oftentimes find myself going into one of the workspaces not to run an agent, but to do some work on isolated copy of my env when I don't wanna stash changes somewhere else and still want full ecosystem running.
 
 ---
 
@@ -133,7 +133,7 @@ I make it aware that this feedback loop exists and I'm not part of it unless I m
 
 ### Tip 1 - Simple CLI
 
-We've built a simple CLI for ourselves long time ago. We use it for ourselves because it helps us dump whatever intricacies of running a service are into config files. For each service I can run `subroutine dev <service>` and it's there.
+We've built a simple CLI for ourselves long time ago. We use it for ourselves because it helps us dump whatever intricacies of running a service are into config files. For each service I can run `subroutine dev <service>` and it starts.
 
 This works pretty well with coding agents. We provide it instructions on what the CLI can do and usually that's enough.
 
@@ -148,22 +148,22 @@ You must use `subroutine` CLI to interact with services in runtime. The binary i
 This usually is enough to get a pretty close feedback loop. The simplification of flow is what matters here. A consistent, simple way of interacting with runtime services makes it very predictable and much easier to use by an agent. A good example of it is writing an iOS app and having an agent try to test it by running xcodebuild directly vs. using <https://github.com/cameroncooke/XcodeBuildMCP>.
 
 We also ask the agent to make sure it still builds clean and lints clean. By default that means running 2-3 different commands like `yarn tsc && yarn eslint && yarn playwright test`.
-You could wrap it into one command (`subroutine validate <service>`) to make sure that the agent doesn't just drop one of the tasks and hands it off to you "production ready".
+You could wrap it into one command (`subroutine validate <service>`) to make sure that the agent doesn't drop one of the tasks and hands it off to you "production ready".
 
 ### Tip 2 - Watchers
 
 My cofounder Jeremy has zero tolerance for any developer experience issues that may add friction for developers and are easy to automate away - he eliminates those aggressively. Because of that, we always run our services automatically. Running `subroutine dev <service>` starts it in a container, sets up a watcher over relevant files and sets up any side processes to run automatically when needed (for instance, regenerating GraphQL types).
 
-We inform an agent upfront that this is the case so, once the service is started, it doesn't have to restart it, but rather interact with logs unless something goes really wrong. The reason this helps is because there's just a few less things that the agent (and the human) have to do to surface the changes in runtime. The loop is shorter with less mechanics.
+We inform an agent upfront that this is the case so, once the service is started, it doesn't have to restart it, but rather interact with logs unless something goes really wrong. The reason this helps is because there are fewer things that the agent (and the human) have to do to surface the changes in runtime. The loop is shorter with less mechanics.
 
 ### Tip 3 - Linters as guard rails
 
-To avoid slop checked in, we still review all the code that AI writes. It can get funky with how it resolves problems with random `setIntervals`, or magical `useRefs` put in directly in the react component . If during a review we find something that is egregious, we'll just take an extra time to slap a lint rule in ESLint to avoid it in the future. Because of Tip 1, this defends pretty well from repeated offenses.
+To avoid slop checked in, we still review all the code that AI writes. It can get funky with how it resolves problems with random `setIntervals`, or magical `useRefs` put in directly in the react component . If during a review we find something that is egregious, we'll take an extra time to slap a lint rule in ESLint to avoid it in the future. Because of Tip 1, this defends pretty well from repeated offenses.
 
 ### Tip 4 - Ruthless optimization
 
 If a task has been done poorly, or required my attention, I'll spend time to make sure the agent has some tools to improve in the future where it makes sense.
 
-As an example - I don't want the agent to run my terraform or apply my kubernetes manifests. I run the agent in a sandbox and in it, kubectl is just not available.
+As an example - I don't want the agent to run my terraform or apply my kubernetes manifests. I run the agent in a sandbox and in it, kubectl is not available.
 
 As the last resort, I'll update AGENTS.md. I do usually ask the coding agent itself to update the instructions to reflect any learnings from the conversation, but do so in a concise way that I'll then review. I do wanna be careful with that though, because what lands in AGENTS.md ultimately uses up context.
