@@ -1,28 +1,161 @@
-import { useParams } from "react-router";
 import type { Route } from "./+types/blog.$slug";
-import { blogPosts } from "./blog";
-import { ExternalLink } from "../components/ExternalLink";
+import { getPostBySlug } from "../utils/posts.server";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeHighlight from 'rehype-highlight';
+import type { Components } from 'react-markdown';
+import 'highlight.js/styles/github-dark.css';
 
-export function meta({ params }: Route.MetaArgs) {
-  const post = blogPosts.find(p => p.slug === params.slug);
+export async function loader({ params }: Route.LoaderArgs) {
+  const post = await getPostBySlug(params.slug);
+  if (!post) {
+    throw new Response("Not Found", { status: 404 });
+  }
+  return { post };
+}
+
+export function meta({ data }: Route.MetaArgs) {
+  if (!data) {
+    return [
+      { title: "Post Not Found" },
+      { name: "description", content: "Blog post not found" },
+    ];
+  }
   return [
-    { title: post ? `${post.title} - My Portfolio` : "Post Not Found" },
-    { name: "description", content: post?.excerpt || "Blog post" },
+    { title: `${data.post.title} - My Portfolio` },
+    { name: "description", content: data.post.excerpt || "Blog post" },
   ];
 }
 
-export default function BlogPost() {
-  const { slug } = useParams();
-  const post = blogPosts.find(p => p.slug === slug);
+export default function BlogPost({ loaderData }: Route.ComponentProps) {
+  const { post } = loaderData;
 
-  if (!post) {
-    return (
-      <div className="text-center text-gray-600 dark:text-gray-400">
-        <h1 className="text-2xl mb-4">Post not found</h1>
-        <ExternalLink href="/blog">← Back to blog</ExternalLink>
+  const components: Components = {
+    h1: ({ children }) => (
+      <h1 className="text-3xl font-bold mt-12 mb-6 text-gray-900 dark:text-white tracking-tight">
+        {children}
+      </h1>
+    ),
+    h2: ({ children }) => (
+      <h2 className="text-2xl font-semibold mt-10 mb-5 text-gray-900 dark:text-white tracking-tight">
+        {children}
+      </h2>
+    ),
+    h3: ({ children }) => (
+      <h3 className="text-xl font-semibold mt-8 mb-4 text-gray-900 dark:text-white">
+        {children}
+      </h3>
+    ),
+    p: ({ children }) => (
+      <p className="text-base leading-7 mb-6 text-gray-700 dark:text-gray-300">
+        {children}
+      </p>
+    ),
+    ul: ({ children }) => (
+      <ul className="list-disc list-outside ml-6 mb-6 space-y-2 text-gray-700 dark:text-gray-300">
+        {children}
+      </ul>
+    ),
+    ol: ({ children }) => (
+      <ol className="list-decimal list-outside ml-6 mb-6 space-y-2 text-gray-700 dark:text-gray-300">
+        {children}
+      </ol>
+    ),
+    li: ({ children }) => (
+      <li className="leading-7">{children}</li>
+    ),
+    code: ({ inline, className, children, ...props }: any) => {
+      if (inline) {
+        return (
+          <code
+            className="bg-gray-200 dark:bg-gray-800 px-1.5 py-0.5 rounded text-sm font-mono text-gray-900 dark:text-gray-300"
+            {...props}
+          >
+            {children}
+          </code>
+        );
+      }
+      return (
+        <code className={className} {...props}>
+          {children}
+        </code>
+      );
+    },
+    pre: ({ children, ...props }: any) => {
+      // Extract language from the code element if present
+      const codeElement = children?.props;
+      const className = codeElement?.className || '';
+      const language = className.replace('hljs language-', '').replace('language-', '');
+
+      return (
+        <div className="my-8">
+          {language && (
+            <div className="bg-gray-800 text-gray-300 text-xs px-4 py-2 rounded-t-lg border-b border-gray-700 font-mono">
+              {language}
+            </div>
+          )}
+          <pre className={`rounded-${language ? 'b' : ''}-lg overflow-hidden bg-[#0d1117] border border-gray-800`}>
+            <div className="overflow-x-auto p-4 text-sm">
+              {children}
+            </div>
+          </pre>
+        </div>
+      );
+    },
+    blockquote: ({ children }) => (
+      <blockquote className="border-l-4 border-blue-500 pl-4 my-6 italic text-gray-700 dark:text-gray-300">
+        {children}
+      </blockquote>
+    ),
+    a: ({ href, children }) => (
+      <a
+        href={href}
+        className="text-blue-600 dark:text-blue-400 hover:underline"
+        target={href?.startsWith('http') ? '_blank' : undefined}
+        rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
+      >
+        {children}
+      </a>
+    ),
+    strong: ({ children }) => (
+      <strong className="font-semibold text-gray-900 dark:text-white">
+        {children}
+      </strong>
+    ),
+    hr: () => (
+      <hr className="my-12 border-0 h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent" />
+    ),
+    table: ({ children }) => (
+      <div className="my-8 overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-300 dark:divide-gray-700 border border-gray-300 dark:border-gray-700 rounded-lg">
+          {children}
+        </table>
       </div>
-    );
-  }
+    ),
+    thead: ({ children }) => (
+      <thead className="bg-gray-100 dark:bg-gray-800">
+        {children}
+      </thead>
+    ),
+    tbody: ({ children }) => (
+      <tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-900">
+        {children}
+      </tbody>
+    ),
+    tr: ({ children }) => (
+      <tr>{children}</tr>
+    ),
+    th: ({ children }) => (
+      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+        {children}
+      </th>
+    ),
+    td: ({ children }) => (
+      <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
+        {children}
+      </td>
+    ),
+  };
 
   return (
     <>
@@ -42,86 +175,26 @@ export default function BlogPost() {
           <h1 className="text-4xl font-semibold mb-4 text-gray-900 dark:text-white tracking-tight bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 dark:from-white dark:via-blue-200 dark:to-purple-200 bg-clip-text">
             {post.title}
           </h1>
-          <time className="text-gray-600 dark:text-gray-500 text-xs font-mono tracking-wide">
-            {post.date}
-          </time>
+          <div className="flex items-center gap-3 text-xs font-mono tracking-wide text-gray-600 dark:text-gray-500">
+            {post.author && (
+              <>
+                <span>{post.author}</span>
+                <span className="text-gray-400 dark:text-gray-600">•</span>
+              </>
+            )}
+            <time>{post.date}</time>
+          </div>
         </header>
 
         {/* Content */}
-        <div className="prose prose-invert max-w-none">
-          {post.content?.split('\n\n').map((paragraph, idx) => {
-            // Handle headers
-            if (paragraph.startsWith('# ')) {
-              return (
-                <h1 key={idx} className="text-2xl font-light text-gray-900 dark:text-white mt-8 mb-4">
-                  {paragraph.replace('# ', '')}
-                </h1>
-              );
-            }
-            if (paragraph.startsWith('## ')) {
-              return (
-                <h2 key={idx} className="text-xl font-light text-gray-900 dark:text-white mt-6 mb-3">
-                  {paragraph.replace('## ', '')}
-                </h2>
-              );
-            }
-
-            // Handle code blocks
-            if (paragraph.startsWith('```')) {
-              const lines = paragraph.split('\n');
-              const code = lines.slice(1, -1).join('\n');
-              return (
-                <pre key={idx} className="bg-gray-100 dark:bg-gray-900 rounded-lg p-4 overflow-x-auto my-4">
-                  <code className="text-gray-900 dark:text-gray-300 text-sm font-mono">{code}</code>
-                </pre>
-              );
-            }
-
-            // Handle bullet lists
-            if (paragraph.includes('\n- ')) {
-              const items = paragraph.split('\n- ').filter(Boolean);
-              return (
-                <ul key={idx} className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2 my-4 leading-7">
-                  {items.map((item, i) => (
-                    <li key={i} className="ml-4">
-                      {item.startsWith('**') ? (
-                        <>
-                          <strong className="text-gray-900 dark:text-white">
-                            {item.match(/\*\*(.*?)\*\*/)?.[1]}
-                          </strong>
-                          {item.replace(/\*\*(.*?)\*\*/, '').replace(': ', ': ')}
-                        </>
-                      ) : (
-                        item
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              );
-            }
-
-            // Handle inline code with backticks
-            const processInlineCode = (text: string) => {
-              const parts = text.split(/(`[^`]+`)/g);
-              return parts.map((part, i) => {
-                if (part.startsWith('`') && part.endsWith('`')) {
-                  return (
-                    <code key={i} className="bg-gray-200 dark:bg-gray-900 px-1.5 py-0.5 rounded text-sm font-mono text-gray-900 dark:text-gray-300">
-                      {part.slice(1, -1)}
-                    </code>
-                  );
-                }
-                return part;
-              });
-            };
-
-            // Regular paragraphs
-            return (
-              <p key={idx} className="text-gray-700 dark:text-gray-300 leading-7 mb-4 text-[15px]">
-                {processInlineCode(paragraph)}
-              </p>
-            );
-          })}
+        <div className="max-w-none">
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            rehypePlugins={[rehypeHighlight]}
+            components={components}
+          >
+            {post.content}
+          </ReactMarkdown>
         </div>
       </article>
     </>

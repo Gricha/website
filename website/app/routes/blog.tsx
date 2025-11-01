@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import type { Route } from "./+types/blog";
+import { getAllPosts } from "../utils/posts.server";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -8,29 +9,13 @@ export function meta({ }: Route.MetaArgs) {
   ];
 }
 
-export const blogPosts: Array<{
-  slug?: string;
-  external?: string;
-  date: string;
-  title: string;
-  excerpt?: string;
-  content?: string;
-}> = [
-    {
-      external: 'https://engineering.fb.com/2016/04/13/ios/automatic-memory-leak-detection-on-ios/',
-      date: 'April 13, 2016',
-      title: 'Automatic memory leak detection on iOS',
-      excerpt: 'How Facebook built tools to automatically detect memory leaks in their iOS app.'
-    },
-    {
-      external: 'https://engineering.fb.com/2015/08/24/ios/reducing-fooms-in-the-facebook-ios-app/',
-      date: 'August 24, 2015',
-      title: 'Reducing FOOMs in the Facebook iOS app',
-      excerpt: 'How Facebook reduced foreground out-of-memory crashes in their iOS app.'
-    }
-  ];
+export async function loader() {
+  const posts = await getAllPosts();
+  return { posts };
+}
 
-export default function Blog() {
+export default function Blog({ loaderData }: Route.ComponentProps) {
+  const { posts } = loaderData;
   return (
     <>
       {/* Title */}
@@ -43,8 +28,8 @@ export default function Blog() {
 
       {/* Blog posts */}
       <div className="space-y-2">
-        {blogPosts.map((post, index) => {
-          const isExternal = 'external' in post;
+        {posts.map((post, index) => {
+          const isExternal = post.external;
           const commonClassName = "group flex items-baseline text-sm py-3 px-4 -mx-4 rounded-lg transition-all duration-300 hover:bg-gradient-to-r hover:from-blue-50/50 hover:via-purple-50/30 hover:to-transparent dark:hover:from-blue-950/20 dark:hover:via-purple-950/10 dark:hover:to-transparent cursor-pointer border border-transparent hover:border-blue-100/50 dark:hover:border-blue-900/30 hover:shadow-sm";
           const commonStyle = { animation: `fadeInUp 0.5s ease-out ${index * 0.1}s backwards` };
 

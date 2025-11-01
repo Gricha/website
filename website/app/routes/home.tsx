@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import type { Route } from "./+types/home";
 import { ExternalLink } from "../components/ExternalLink";
+import { getAllPosts } from "../utils/posts.server";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -9,24 +10,13 @@ export function meta({ }: Route.MetaArgs) {
   ];
 }
 
-export default function Home() {
-  const blogPosts: Array<{
-    slug?: string;
-    external?: string;
-    date: string;
-    title: string;
-  }> = [
-      {
-        external: 'https://engineering.fb.com/2016/04/13/ios/automatic-memory-leak-detection-on-ios/',
-        date: 'April 13, 2016',
-        title: 'Automatic memory leak detection on iOS'
-      },
-      {
-        external: 'https://engineering.fb.com/2015/08/24/ios/reducing-fooms-in-the-facebook-ios-app/',
-        date: 'August 24, 2015',
-        title: 'Reducing FOOMs in the Facebook iOS app'
-      }
-    ];
+export async function loader() {
+  const posts = await getAllPosts();
+  return { posts };
+}
+
+export default function Home({ loaderData }: Route.ComponentProps) {
+  const { posts: blogPosts } = loaderData;
 
   return (
     <>
@@ -68,13 +58,13 @@ export default function Home() {
       {/* Blog posts with improved hover states */}
       <div className="space-y-1">
         {blogPosts.map((post, index) => {
-          const isExternal = 'external' in post;
+          const isExternal = post.external;
           const commonClassName = "group flex items-baseline text-xs py-3 px-0 transition-all duration-200 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/20 cursor-pointer border-l-2 border-transparent hover:border-emerald-500 hover:pl-3";
           const commonStyle = { animation: `fadeInUp 0.5s ease-out ${index * 0.1}s backwards` };
 
           return isExternal ? (
             <a
-              key={index}
+              key={post.external}
               href={post.external}
               target="_blank"
               rel="noopener noreferrer"
@@ -94,7 +84,7 @@ export default function Home() {
             </a>
           ) : (
             <Link
-              key={index}
+              key={post.slug}
               to={`/blog/${post.slug}`}
               className={commonClassName}
               style={commonStyle}
