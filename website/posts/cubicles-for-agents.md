@@ -16,7 +16,7 @@ Most of my work with agents boils down to either pairing on hard features where 
 
 ## Paradigms of running agents in parallel
 
-![Mechanisms for parallelization](/public/parallelization.png)
+![Mechanisms for parallelization](/Parallelization.png)
 
 I've seen people use parallel coding agents in a few ways so far. I do wanna preface this doesn't really cover _remote_ workflows where the actual work is done via Claude Code web, etc.
 
@@ -78,7 +78,7 @@ These workspaces can persist over time, or you can tear them down whenever. I en
 In this example I just run my main workspace directly in VSCode. The terminals each run a Codex instance on a separate workspace. Each of these are fully isolated.
 
 <video controls width="100%" className="rounded-lg my-6">
-  <source src="/public/videoVscode.mp4" type="video/mp4" />
+  <source src="/videoVscode.mp4" type="video/mp4" />
   Your browser doesn't support video.
 </video>
 
