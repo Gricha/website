@@ -20,13 +20,13 @@ Most of my work with agents boils down to either pairing on hard features where 
 
 I've seen people use parallel coding agents in a few ways so far. I do wanna preface this doesn't really cover _remote_ workflows where the actual work is done via Claude Code web, etc.
 
-### Same directory
+## Same directory
 
 I know some people can successfully run a few agents in the same repository and not worry about the potential of agents crashing into each other.
 
 Not for me. This gives me a sense of impending doom.
 
-### `git worktrees`
+## Using `git worktrees`
 
 Lots of tools that I see out there offer parallel agent execution utilizing git worktrees. It's pretty good middle ground between no isolation and full on sandboxing.
 
@@ -38,7 +38,7 @@ I don't trust I can fully close a loop in this model, and I don't necessarily wa
 
 I will say however, it's really nice that (compared with sandboxes in the next section) I don't really have to worry about sharing credentials/logging in in each sandbox for agents, or docker, or syncing neovim configuration with sandbox. The host machine is already configured!
 
-### Sandbox
+## Sandbox
 
 This is how I **actually** run agents for my work. And not only agents, I just run multiple of these for my own development.
 
@@ -81,7 +81,7 @@ If I wanna get on development machine and use something like neovim, I just run 
 
 You need to proxy relevant ports from the container onto your host when you wanna test your thing in the browser. There's a simple `workspace proxy <name>` that'll get it done. It's an interruptible command that will establish a tunnel for as long as it's running. The ports that will be specifically mapped are defined in the `.workspace.yml` file:
 
-```
+```yaml
 repo:
   remote: git@github.com:Gricha/code.git
   branch: main
@@ -119,7 +119,7 @@ Here's some tips and tricks of what has worked for me.
 
 I point the agent at what I consider a finished request. The goal isn't to just implement a feature, it is to make it tested, to validate it runs, and the project builds cleanly.
 
-```
+```AGENTS.md
 You MUST make sure that your code compiles, passes lint check, and the test suite passes.
 When writing a new feature, API, or workflow you must write new tests for it. If you are changing existing functionality you must fix tests for it. Never delete tests. If you think you need to delete a test, stop what you're doing and ask if you should delete a test.
 ```
@@ -132,7 +132,7 @@ We've built a simple CLI for ourselves long time ago. We use it for ourselves be
 
 This works pretty well with coding agents. We provide it instructions on what the CLI can do and usually that's enough.
 
-```
+```AGENTS.md
 You must use `subroutine` CLI to interact with services in runtime. The binary is installed and part of PATH.
 * `subroutine dev <service>` to start a service
 * `subroutine test <service>` to test a service

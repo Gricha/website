@@ -64,17 +64,21 @@ export default function BlogPost({ loaderData }: Route.ComponentProps) {
     li: ({ children }) => (
       <li className="leading-7">{children}</li>
     ),
-    code: ({ inline, className, children, ...props }: any) => {
-      if (inline) {
+    code: ({ node, inline, className, children, ...props }: any) => {
+      // Inline code doesn't have a className from language detection
+      const isInline = inline || !className?.includes('language-');
+
+      if (isInline) {
         return (
           <code
-            className="bg-gray-200 dark:bg-gray-800 px-1.5 py-0.5 rounded text-sm font-mono text-gray-900 dark:text-gray-300"
+            className="bg-gray-200 dark:bg-gray-800 px-1.5 py-0.5 rounded text-sm font-mono text-gray-900 dark:text-gray-300 whitespace-nowrap"
             {...props}
           >
             {children}
           </code>
         );
       }
+      // Block code with syntax highlighting
       return (
         <code className={className} {...props}>
           {children}
