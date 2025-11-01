@@ -3,6 +3,7 @@ import { getPostBySlug } from "../utils/posts.server";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
+import rehypeRaw from 'rehype-raw';
 import type { Components } from 'react-markdown';
 import 'highlight.js/styles/github-dark.css';
 
@@ -194,7 +195,7 @@ export default function BlogPost({ loaderData }: Route.ComponentProps) {
         <div className="max-w-none">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
-            rehypePlugins={[rehypeHighlight]}
+            rehypePlugins={[rehypeRaw, rehypeHighlight]}
             components={components}
           >
             {post.content}

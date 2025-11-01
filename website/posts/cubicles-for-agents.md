@@ -73,9 +73,14 @@ The concept is dead simple - the CLI spins up a container for you, clones the re
 
 These workspaces can persist over time, or you can tear them down whenever. I end up just running a few of persistent ones and bring up/take down new ones as I need them.
 
-`workspace start alpha` will get me a workspace named `alpha`. With it I can do a few things out of the box. Each workspace on creation is assigned a persistent SSH port, so in VSCode, using RemoteSSH, I can just add hosts as `localhost:2222` (or whatever post it has been assigned).
+`workspace start alpha` will get me a workspace named `alpha`. With it I can do a few things out of the box. Each workspace on creation is assigned a persistent SSH port, so in VSCode, using RemoteSSH, I can just add hosts as `localhost:2222` (or whatever post it has been assigned). Or I can run `workspace shell alpha` and kick off NeoVim directly on the container.
 
-If I wanna get on development machine and use something like neovim, I just run `workspace shell alpha` and I'm there. I have a custom script that I've put into [examples](https://github.com/subroutinecom/workspace/tree/main/examples/userscripts) that sets up my ZSH inside the container in the way I like it.
+In this example I just run my main workspace directly in VSCode. The terminals each run a Codex instance on a separate workspace. Each of these are fully isolated.
+
+<video controls width="100%" className="rounded-lg my-6">
+  <source src="/public/videoVscode.mp4" type="video/mp4" />
+  Your browser doesn't support video.
+</video>
 
 ### Testing in browser
 
