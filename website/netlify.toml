@@ -4,3 +4,12 @@ publish = "build/client"
 
 [dev]
 command = "react-router dev"
+
+[functions]
+  included_files = ["posts/**/*.md"]
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
