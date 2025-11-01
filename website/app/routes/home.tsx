@@ -28,11 +28,11 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       </div>
 
       <div className="mb-20 text-gray-700 dark:text-gray-300 leading-relaxed space-y-5 text-base">
-        <img
+        {/* <img
           src="/offcenter.jpeg"
           alt="Profile"
           className="w-48 h-48 rounded-lg object-cover border-2 border-gray-200 dark:border-gray-800 shadow-md float-right ml-6 mb-4"
-        />
+        /> */}
         <p>
           My name is Greg Pstrucha. I'm an engineer enjoying working on developer velocity and performance. I am a cofounder at <ExternalLink href="https://subroutine.com">Subroutine</ExternalLink>.
         </p>
