@@ -34,16 +34,20 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           className="w-48 h-48 rounded-lg object-cover border-2 border-gray-200 dark:border-gray-800 shadow-md float-right ml-6 mb-4"
         /> */}
         <p>
-          My name is Greg Pstrucha and I'm an engineer focused on developer velocity and performance. I am cofounder of <ExternalLink href="https://subroutine.com">Subroutine</ExternalLink>.
+          My name is Greg Pstrucha. I'm an engineer enjoying working on developer velocity and performance. I am a cofounder at <ExternalLink href="https://subroutine.com">Subroutine</ExternalLink>.
+        </p>
+        <p>
+          Most recently I worked on <ExternalLink href="https://github.com/subroutinecom/workspace">workspace CLI</ExternalLink>, a very simple tool in style of dev containers aimed at
+          optimizing my own local development flow and parallelize coding agent execution in a fully sandboxed manner.
+        </p>
+        <p>
+          On the side I enjoy spending my time in the garage woodworking and tinkering with electronics.
         </p>
         <p>
           Previously I've worked at Robinhood where I led API Platform team.
 
           Between 2013-2019 I worked at Facebook. There I've spent most of my time on Mobile Infrastructure team where I
           have created <ExternalLink href="https://github.com/facebook/FBRetainCycleDetector">FBRetainCycleDetector</ExternalLink>, and worked on performance of iOS startup time.
-        </p>
-        <p>
-          On the side I enjoy spending my time in the garage woodworking and tinkering with electronics.
         </p>
       </div>
 
