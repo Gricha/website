@@ -22,7 +22,7 @@ export function meta({ data }: Route.MetaArgs) {
     ];
   }
   return [
-    { title: `${data.post.title} - My Portfolio` },
+    { title: `${data.post.title}` },
     { name: "description", content: data.post.excerpt || "Blog post" },
   ];
 }

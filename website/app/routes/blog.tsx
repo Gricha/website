@@ -4,7 +4,7 @@ import { getAllPosts } from "../utils/posts.server";
 
 export function meta({ }: Route.MetaArgs) {
   return [
-    { title: "Blog - My Portfolio" },
+    { title: "Blog" },
     { name: "description", content: "Articles and thoughts on programming" },
   ];
 }
