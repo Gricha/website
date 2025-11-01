@@ -152,7 +152,7 @@ You could wrap it into one command (`subroutine validate <service>`) to make sur
 
 ### Tip 2 - Watchers
 
-We always run our services automatically. Running `subroutine dev <service>` starts it in a container, sets up a watcher over relevant files and sets up any side processes to run automatically when needed (for instance, regenerating GraphQL types).
+My cofounder Jeremy has zero tolerance for any developer experience issues that may add friction for developers and are easy to automate away - he eliminates those aggressively. Because of that, we always run our services automatically. Running `subroutine dev <service>` starts it in a container, sets up a watcher over relevant files and sets up any side processes to run automatically when needed (for instance, regenerating GraphQL types).
 
 We inform an agent upfront that this is the case so, once the service is started, it doesn't have to restart it, but rather interact with logs unless something goes really wrong. The reason this helps is because there's just a few less things that the agent (and the human) have to do to surface the changes in runtime. The loop is shorter with less mechanics.
 
@@ -167,7 +167,3 @@ If a task has been done poorly, or required my attention, I'll spend time to mak
 As an example - I don't want the agent to run my terraform or apply my kubernetes manifests. I run the agent in a sandbox and in it, kubectl is just not available.
 
 As the last resort, I'll update AGENTS.md. I do usually ask the coding agent itself to update the instructions to reflect any learnings from the conversation, but do so in a concise way that I'll then review. I do wanna be careful with that though, because what lands in AGENTS.md ultimately uses up context.
-
-### Developer Experience
-
-Most of these tips really boil down to working on a good developer experinece in the project. Most of those are generally valuable to engineers working inside the same codebase and onboarding agents may be a good excuse to iron out some kinks and provide great DX for everyone. We want to make sure there's a simple way of running the project without arcane knowledge and bespoke tools, surface quality issues quickly and reduce required operations through automation. We are largely able to do it thanks to my cofounder, Jeremy Stanley, who has zero-tolerance for bad developer experience that can be easily automated away.
