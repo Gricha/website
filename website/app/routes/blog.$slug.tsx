@@ -5,7 +5,6 @@ import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeRaw from 'rehype-raw';
 import type { Components } from 'react-markdown';
-import 'highlight.js/styles/github-dark.css';
 
 export async function loader({ params }: Route.LoaderArgs) {
   const post = await getPostBySlug(params.slug);
@@ -87,24 +86,10 @@ export default function BlogPost({ loaderData }: Route.ComponentProps) {
       );
     },
     pre: ({ children, ...props }: any) => {
-      // Extract language from the code element if present
-      const codeElement = children?.props;
-      const className = codeElement?.className || '';
-      const language = className.replace('hljs language-', '').replace('language-', '');
-
       return (
-        <div className="my-8">
-          {language && (
-            <div className="bg-gray-800 text-gray-300 text-xs px-4 py-2 rounded-t-lg border-b border-gray-700 font-mono">
-              {language}
-            </div>
-          )}
-          <pre className={`rounded-${language ? 'b' : ''}-lg overflow-hidden bg-[#0d1117] border border-gray-800`}>
-            <div className="overflow-x-auto p-4 text-sm">
-              {children}
-            </div>
-          </pre>
-        </div>
+        <pre className="my-6 overflow-x-auto p-4 rounded-lg border border-gray-300 dark:border-gray-700">
+          {children}
+        </pre>
       );
     },
     blockquote: ({ children }) => (

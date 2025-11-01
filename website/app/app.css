@@ -1,6 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
 @import "tailwindcss";
 
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+/* Syntax highlighting themes */
+@import "highlight.js/styles/github.css" (prefers-color-scheme: light);
+@import "highlight.js/styles/github-dark.css" (prefers-color-scheme: dark);
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
@@ -8,12 +11,16 @@
   --font-mono: "Space Mono", "JetBrains Mono", "Fira Code", "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
 }
 
-html.light {
-  color-scheme: light;
+@media (prefers-color-scheme: light) {
+  html {
+    color-scheme: light;
+  }
 }
 
-html.dark {
-  color-scheme: dark;
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
 }
 
 html,
@@ -68,3 +75,20 @@ body > * {
     background-position: 200% 0;
   }
 }
+
+/* Override highlight.js backgrounds to use our pre background */
+.hljs {
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+pre {
+  background: white;
+}
+
+@media (prefers-color-scheme: dark) {
+  pre {
+    background: #0d1117;
+  }
+}
+
