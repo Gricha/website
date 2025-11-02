@@ -6,9 +6,9 @@ author: "Greg Pstrucha"
 
 I had a pleasure to give a lightning talk at last edition of Claude Code Anonymous in San Francisco a few weeks back, where I chatted about running multiple instances of coding agents in parallel. I've broken this down into two pieces - what are the mechanisms to run the agents in parallel (The Breadth), and how to improve on agent's ability to finish the request successfully without additional user input (The Depth).
 
-# Running the agents in parallel
-
 _TLDR: Most parallel agent setups rely on git worktrees, but these don't provide true isolation of processes in runtime. We've set up tools around quickly creating fully sandboxed development environments using Docker._
+
+# Running the agents in parallel
 
 I've started to explore running agents in parallel a few months ago. I was curious if I can get to the point where I end up using many of them at the same time. Having been at it for a few months, now I run no more than 2-3 at once, but the way I run them feels very enjoyable and not overwhelming.
 
