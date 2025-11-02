@@ -8,6 +8,8 @@ I had a pleasure to give a lightning talk at last edition of Claude Code Anonymo
 
 # Running the agents in parallel
 
+_TLDR: Most parallel agent setups rely on git worktrees, but these don't provide true isolation of processes in runtime. We've set up tools around quickly creating fully sandboxed development environments using Docker._
+
 I've started to explore running agents in parallel a few months ago. I was curious if I can get to the point where I end up using many of them at the same time. Having been at it for a few months, now I run no more than 2-3 at once, but the way I run them feels very enjoyable and not overwhelming.
 
 I think there's a good argument for running more of them if you have very asynchronous workflows to do (refactors, for instance).
