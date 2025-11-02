@@ -6,7 +6,7 @@ author: "Greg Pstrucha"
 
 I had a pleasure to give a lightning talk at last edition of Claude Code Anonymous in San Francisco a few weeks back, where I chatted about running multiple instances of coding agents in parallel. I've broken this down into two pieces - what are the mechanisms to run the agents in parallel (The Breadth), and how to improve on agent's ability to finish the request successfully without additional user input (The Depth).
 
-_TLDR: Most parallel agent setups rely on git worktrees, but these don't provide true isolation of processes in runtime. We've set up tools around quickly creating fully sandboxed development environments using Docker._
+_TLDR: Most parallel agent setups rely on git worktrees, but these don't provide true isolation of processes in runtime. We've set up a tool around quickly creating fully sandboxed development environments using Docker. [Check it out here](https://github.com/subroutinecom/workspace)._
 
 # Running the agents in parallel
 
