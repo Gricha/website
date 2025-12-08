@@ -37,9 +37,18 @@ done
 
 This was running for around 36 hours and took me some time to grok through, but let's see what it did. The entire [repo is here btw](https://github.com/Gricha/macro-photo/tree/highest-quality). The branch you're looking for is `highest-quality`.
 
+## The app
+
+This app is around 4-5 screens. Take a photo, add description, get AI response. Simple as that.
+
+<div style="display: flex; gap: 1rem; justify-content: center; margin: 1.5rem 0;">
+  <img src="/macroPhotoList.png" alt="Main screen" style="max-width: 250px; height: auto; border-radius: 8px;" />
+  <img src="/macroPhotoDetails.png" alt="Details page" style="max-width: 250px; height: auto; border-radius: 8px;" />
+</div>
+
 ## Pure numbers
 
-This app is around 4-5 screens. Take a photo, add description, get AI response. Simple as that. The version "pre improving quality" was already pretty large:
+The version "pre improving quality" was already pretty large. We are talking around 20k lines of TS, around 9.7k is in various `__tests__` directories. This was _slightly_ intentional - when working with Claude Code, having good self-validation harness greatly improves the quality of results.
 
 ```shell
 cloc . --exclude-dir=node_modules,dist,build,.expo,.husky,.maestro,Pods
@@ -61,9 +70,7 @@ SUM:                           127           4118           1635          47237
 -------------------------------------------------------------------------------
 ```
 
-We are talking around 20k lines of TS, around 9.7k is in various `__tests__` directories. This was _slightly_ intentional - when working with Claude Code, having good self-validation harness greatly improves the quality of results.
-
-But let's see the aftermath.
+But in the aftermath - **84 thousand!** We went 20k -> 84k on "improvements" to the quality of the codebase.
 
 ```shell
  cloc . --exclude-dir=node_modules,dist,build,.expo,.husky,.maestro,Pods
@@ -85,7 +92,7 @@ SUM:                           281          21870          18933         120480
 -------------------------------------------------------------------------------
 ```
 
-**84 thousand!** We went 20k -> 84k on "improvements" to the quality of the codebase.
+Tests alone went from 10k to **60k** LOC!
 
 ```shell
 cloc . \
@@ -103,11 +110,6 @@ TypeScript                     138          13919           3685          60366
 SUM:                           138          13919           3685          60366
 -------------------------------------------------------------------------------
 ```
-
-So we went:
-
-- Business logic - 10k -> 20k
-- **Tests - 10k -> 60k**
 
 I feel much safer.
 
@@ -155,7 +157,7 @@ In message log, the agent often boasts about the number of tests added, or that 
 
 # Summary
 
-All in all, the project has more code to maintained, most of it largely useless. Tons of tests got added, but some tests that mattered the most (maestro e2e tests that validated the app still works) got forgotten. It had some moments of "goodness", like making sure typechecks are of high quality.
+All in all, the project has more code to maintained, most of it largely useless. Tons of tests got added, but some tests that mattered the most (maestro e2e tests that validated the app still works) were forgotten. It had some moments of "goodness", like making sure typechecks are of high quality.
 
 To truly resemble the test of "redraw this image 1000 times"/"reupload this video 1000 times", I think the loop would have to be two step:
 
@@ -166,4 +168,4 @@ This was obviously done in jest, I didn't expect that this will improve the qual
 
 I still use coding agents for my day to day development. If anything it feels like time spent reviewing AI code was not a waste of time.
 
-..oh and the app still works, although it has a few new bugs.
+...oh and the app still works, there's no new features, and just a few new bugs.
