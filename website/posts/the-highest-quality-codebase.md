@@ -8,7 +8,7 @@ Have you seen one of [the experiments](https://www.reddit.com/r/ChatGPT/comments
 
 Or Marques Brownlee's youtube videos where the [video is reuploaded a 1000 times](https://www.youtube.com/watch?v=JR4KHfqw-oE)?
 
-Over the thanksgiving weekend I had some time on my hands and tasked Claude to write me an app to guestimate macronutrients in some foods based on description + photo. There's some interesting setup in getting it right, but that's boring. It has created a great, functional app for me, but then I forced it to do a small, evil experiment for me.
+Over the Thanksgiving weekend I had some time on my hands and tasked Claude to write me an app to guestimate macronutrients in some foods based on description + photo. There's some interesting setup in getting it right, but that's boring. It has created a great, functional app for me, but then I forced it to do a small, evil experiment for me.
 
 I've written a quick script that looped over my codebase and ran this command.
 
@@ -155,8 +155,15 @@ In message log, the agent often boasts about the number of tests added, or that 
 
 # Summary
 
-This was obviously done in jest. I'm not anti coding agents by any means. I use them daily for work and side projects. The app I produced at the beginning is actually something that I use for myself now.
+All in all, the project has more code to maintained, most of it largely useless. Tons of tests got added, but some tests that mattered the most (maestro e2e tests that validated the app still works) got forgotten. It had some moments of "goodness", like making sure typechecks are of high quality.
 
-It is, however, very funny to see how it operated when I prompted it to failure. It also makes me feel I haven't been wasting my time by reviewing the code that AI produces for the actual work I need done.
+To truly resemble the test of "redraw this image 1000 times"/"reupload this video 1000 times", I think the loop would have to be two step:
+
+- Read and summarize the project
+- Implement a fresh project based off of this description
+
+This was obviously done in jest, I didn't expect that this will improve the quality of codebase in the ways that I think truly matters. I've prompted Claude Code to failure here and it definitely produced some funny results.
+
+I still use coding agents for my day to day development. If anything it feels like time spent reviewing AI code was not a waste of time.
 
 ..oh and the app still works, although it has a few new bugs.

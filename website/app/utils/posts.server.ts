@@ -55,8 +55,15 @@ export async function getAllPosts(): Promise<BlogPost[]> {
     }
   ];
 
+  const parseDate = (date: string) => {
+    const parsed = Date.parse(date);
+    return Number.isNaN(parsed) ? 0 : parsed;
+  };
+
   // Combine and sort by date (most recent first)
-  return [...markdownPosts, ...externalPosts];
+  return [...markdownPosts, ...externalPosts].sort(
+    (a, b) => parseDate(b.date) - parseDate(a.date)
+  );
 }
 
 export async function getPostBySlug(slug: string): Promise<BlogPost | undefined> {

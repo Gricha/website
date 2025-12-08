@@ -34,7 +34,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
       id: postUrl,
       link: postUrl,
       description: post.excerpt || '',
-      content: post.content || post.excerpt || '',
       author: [
         {
           name: post.author || "Greg Pstrucha",
