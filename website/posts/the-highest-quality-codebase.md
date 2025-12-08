@@ -8,7 +8,7 @@ Have you seen one of [the experiments](https://www.reddit.com/r/ChatGPT/comments
 
 Or Marques Brownlee's youtube videos where the [video is reuploaded a 1000 times](https://www.youtube.com/watch?v=JR4KHfqw-oE)?
 
-Over the Thanksgiving weekend I had some time on my hands and tasked Claude to write me an app to guestimate macronutrients in some foods based on description + photo. There's some interesting setup in getting it right, but that's boring. It has created a great, functional app for me, but then I forced it to do a small, evil experiment for me.
+Over the Thanksgiving weekend I had some time on my hands and tasked Claude to write an app that guestimates macronutrients in some foods based on description + photo. There's some interesting setup in getting it right, but that's boring. It has created a great, functional app for me, but then I forced it to do a small, evil experiment for me.
 
 I've written a quick script that looped over my codebase and ran this command.
 
@@ -33,7 +33,7 @@ for i in $(seq 1 "$MAX_ITERS"); do
 done
 ```
 
-...and havoc it wrecked. Over 200 times of unmitigated madness. I have tweaked the prompt here and there when I've been seeing it overindexing in single thing, but with enough iterations it was touching everything.. from full code coverage and more tests than functional code, to rust-style Result types (in Typescript), to.. estimating entropy of hashing function (???).
+...and havoc it wrecked. Over 200 times of unmitigated madness. I have tweaked the prompt here and there when I've been seeing it overindexing on a single thing, but with enough iterations it started covering a lot of ground.. from full code coverage and more tests than functional code, to rust-style Result types, to.. estimating entropy of hashing function (???).
 
 This was running for around 36 hours and took me some time to grok through, but let's see what it did. The entire [repo is here btw](https://github.com/Gricha/macro-photo/tree/highest-quality). The branch you're looking for is `highest-quality`.
 
@@ -61,9 +61,9 @@ SUM:                           127           4118           1635          47237
 -------------------------------------------------------------------------------
 ```
 
-We are talking around 20k lines of TS, around 9.7k is in various `__tests__` directories. This was slightly intentional - when working with Claude Code, I find it having good self-validation harness greatly improves the quality of results.
+We are talking around 20k lines of TS, around 9.7k is in various `__tests__` directories. This was _slightly_ intentional - when working with Claude Code, having good self-validation harness greatly improves the quality of results.
 
-But let's see what our "principal engineer" did.
+But let's see the aftermath.
 
 ```shell
  cloc . --exclude-dir=node_modules,dist,build,.expo,.husky,.maestro,Pods
@@ -85,7 +85,7 @@ SUM:                           281          21870          18933         120480
 -------------------------------------------------------------------------------
 ```
 
-**84 thousand!** We went 20k -> 84k on, keep in mind, improvements to the quality of the codebase.
+**84 thousand!** We went 20k -> 84k on "improvements" to the quality of the codebase.
 
 ```shell
 cloc . \
@@ -111,7 +111,7 @@ So we went:
 
 I feel much safer.
 
-For what it's worth, we went from around 700 to a whooping **5369** tests. We also had e2e tests using actual simulator - they are pretty important to make sure that the coding agent has closed feedback loop, but in the process of improving the quality they seemed to have been kinda forgotten ¯\\\_(ツ)\_/¯.
+We went from around 700 to a whooping **5369** tests. In the original project I had e2e tests using actual simulator - they are pretty important to make sure that the coding agent has closed feedback loop, but in the process of improving the quality they seemed to have been forgotten ¯\\\_(ツ)\_/¯.
 
 Btw. we went from ~1500 lines of comments to 18.7k.
 
@@ -132,7 +132,7 @@ Some are just insane - here are my favorites!
 
 - The Result Type implementation [lib/result.ts](https://github.com/Gricha/macro-photo/blob/highest-quality/lib/result.ts) - `This module provides a Result type (similar to Rust's Result<T, E>)`.
 
-I _like_ Rust's result-handling system, I don't think it works very well if you try to bring it to the entire ecosystem that already is standardized on error throwing. In my previous job we experimented with doing that in Python. It wasn't clicking very well with people and felt pretty forced.
+I _like_ Rust's result-handling system, I don't think it works very well if you try to bring it to the entire ecosystem that already is standardized on error throwing. In my previous job we experimented with doing that in Python. It wasn't clicking very well with people and using it felt pretty forced. I'd stray away from it.
 
 This made me giggle because of course AI started bringing patterns from Rust. There's [lib/option.ts](https://github.com/Gricha/macro-photo/blob/highest-quality/lib/option.ts) too.
 
@@ -143,15 +143,15 @@ This made me giggle because of course AI started bringing patterns from Rust. Th
 
 In some iterations, coding agent put on a hat of security engineer. For instance - it created a `hasMinimalEntropy` function meant to "detect obviously fake keys with low character variety". I don't know why.
 
-To ensure we have proper scalability it has implemented circuit breaking and jittering exponential backoff. Keep in mind the only API we are talking to is OpenAI/Anthropic. You're welcome.
+To ensure we have proper scalability it has implemented circuit breaking and jittering exponential backoff. The only API we are talking to is OpenAI/Anthropic. You're welcome.
 
-The positive - there's been a lot of time spent on making sure that we have strict type checking, we don't overly cast (`as any as T`) and, hey, I respect that.
+**The positive** - there's been a lot of time spent on making sure that we have strict type checking, we don't overly cast (`as any as T`) and, hey, I respect that.
 
-## The Quality Metrics
+## The success criteria - Quality Metrics
 
-The prompt, in all its versions, always focuses on us improving the codebase quality. It is interesting to see how that metric is perceived by AI agent. It was disappointing to see that the leading principle was to define vanity metrics and push for "more is better".
+The prompt, in all its versions, always focuses on us improving the codebase quality. It was disappointing to see how that metric is perceived by AI agent. The leading principle was to define a few vanity metrics and push for "more is better".
 
-In message log, the agent often boasts about the number of tests added, or that code coverage (ugh) is over some arbitrary percentage. We end up with an absolute moloch of unmaintainable code in the name of quality. But hey the number is going up.
+In message log, the agent often boasts about the number of tests added, or that code coverage (ugh) is over some arbitrary percentage. We end up with an absolute moloch of unmaintainable code in the name of quality. But hey, the number is going up.
 
 # Summary
 
