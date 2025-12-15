@@ -40,7 +40,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <div className="max-w-3xl mx-auto px-6 py-8 selection:bg-emerald-200 selection:text-gray-900 dark:selection:bg-emerald-900 dark:selection:text-gray-100">
-      {/* <Navbar /> */}
       <main className="mb-8 mt-12">
         <Outlet />
       </main>
