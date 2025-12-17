@@ -19,4 +19,6 @@ export default {
       ...blogSlugs,
     ];
   },
+  // Bundle route manifest upfront instead of fetching from /__manifest
+  routeDiscovery: { mode: "initial" },
 } satisfies Config;
