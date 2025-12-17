@@ -7,4 +7,5 @@ export default [
   route("rss.xml", "routes/rss[.]xml.tsx"),
   route("atom.xml", "routes/atom[.]xml.tsx"),
   route("feed.json", "routes/feed[.]json.tsx"),
+  route("sitemap.xml", "routes/sitemap[.]xml.tsx"),
 ] satisfies RouteConfig;

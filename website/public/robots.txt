@@ -1,0 +1,9 @@
+# Allow all crawlers including AI
+User-agent: *
+Allow: /
+
+# Block framework internals
+Disallow: /build/
+
+# Sitemap
+Sitemap: https://gregpstrucha.com/sitemap.xml
