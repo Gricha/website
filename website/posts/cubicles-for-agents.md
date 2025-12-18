@@ -18,7 +18,7 @@ Most of my work with agents boils down to either pairing on hard features where 
 
 ## Paradigms of running agents in parallel
 
-![Mechanisms for parallelization](/Parallelization.png)
+![Mechanisms for parallelization](/Parallelization.webp)
 
 I've seen people use parallel coding agents in a few ways so far. I do wanna preface this doesn't really cover _remote_ workflows where the actual work is done via Claude Code web, etc.
 

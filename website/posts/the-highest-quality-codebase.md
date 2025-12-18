@@ -42,8 +42,8 @@ This was running for around 36 hours and took me some time to grok through, but 
 This app is around 4-5 screens. Take a photo, add description, get AI response. Simple as that.
 
 <div style="display: flex; gap: 1rem; justify-content: center; margin: 1.5rem 0;">
-  <img src="/macroPhotoList.png" alt="Main screen" style="max-width: 250px; height: auto; border-radius: 8px;" />
-  <img src="/macroPhotoDetails.png" alt="Details page" style="max-width: 250px; height: auto; border-radius: 8px;" />
+  <img src="/macroPhotoList.webp" alt="Main screen" style="max-width: 250px; height: auto; border-radius: 8px;" />
+  <img src="/macroPhotoDetails.webp" alt="Details page" style="max-width: 250px; height: auto; border-radius: 8px;" />
 </div>
 
 ## Pure numbers

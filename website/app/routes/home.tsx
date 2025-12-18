@@ -29,7 +29,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
       <div className="mb-20 text-gray-700 dark:text-gray-300 leading-relaxed space-y-5 text-base">
         {/* <img
-          src="/offcenter.jpeg"
+          src="/offcenter.webp"
           alt="Profile"
           className="w-48 h-48 rounded-lg object-cover border-2 border-gray-200 dark:border-gray-800 shadow-md float-right ml-6 mb-4"
         /> */}
