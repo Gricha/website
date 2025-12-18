@@ -5,6 +5,39 @@ publish = "build/client"
 [dev]
 command = "react-router dev"
 
+# Legacy posts: serve both URLs (don't break cached 301s)
+[[redirects]]
+  from = "/blog/cubicles-for-agents"
+  to = "/blog/cubicles-for-agents/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/blog/cubicles-for-agents/"
+  to = "/blog/cubicles-for-agents/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/blog/the-highest-quality-codebase"
+  to = "/blog/the-highest-quality-codebase/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/blog/the-highest-quality-codebase/"
+  to = "/blog/the-highest-quality-codebase/index.html"
+  status = 200
+
+# New posts: redirect trailing slash to no trailing slash
+[[redirects]]
+  from = "/blog/*/"
+  to = "/blog/:splat"
+  status = 301
+
+# Serve new posts without redirect
+[[redirects]]
+  from = "/blog/*"
+  to = "/blog/:splat/index.html"
+  status = 200
+
 [[headers]]
   for = "/*"
   [headers.values]
