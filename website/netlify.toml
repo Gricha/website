@@ -8,6 +8,13 @@ pretty_urls = false
 [dev]
 command = "react-router dev"
 
+# MCP Game proxy
+[[redirects]]
+  from = "/happyholidays/mcp"
+  to = "https://mcpgame.netlify.app/mcp"
+  status = 200
+  force = true
+
 # Legacy posts: serve both URLs (don't break cached 301s)
 [[redirects]]
   from = "/blog/cubicles-for-agents"
