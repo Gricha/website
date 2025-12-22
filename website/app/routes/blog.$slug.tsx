@@ -5,6 +5,7 @@ import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeRaw from 'rehype-raw';
 import type { Components } from 'react-markdown';
+import { SocialsIconsOnly } from "../components/SocialsIconsOnly";
 
 export async function loader({ params }: Route.LoaderArgs) {
   const post = await getPostBySlug(params.slug);
@@ -150,12 +151,13 @@ export default function BlogPost({ loaderData }: Route.ComponentProps) {
   return (
     <>
 
-      {/* Back link */}
-      <div className="mb-8 -mt-8">
-        <a href="/blog" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 text-sm font-mono inline-flex items-center group">
-          <span className="transition-transform duration-300 group-hover:-translate-x-1">←</span>
+      {/* Back link and socials */}
+      <div className="mb-8 -mt-8 flex items-center justify-between">
+        <a href="/blog" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 text-base font-mono inline-flex items-center group">
+          <span className="transition-transform duration-300 group-hover:-translate-x-1 -translate-y-px">←</span>
           <span className="ml-2">Back to blog</span>
         </a>
+        <SocialsIconsOnly />
       </div>
 
       {/* Article */}
