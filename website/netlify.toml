@@ -15,6 +15,19 @@ command = "react-router dev"
   status = 200
   force = true
 
+# MCP OAuth discovery (for Claude.ai connector)
+[[redirects]]
+  from = "/.well-known/oauth-protected-resource"
+  to = "https://mcpgame.netlify.app/.well-known/oauth-protected-resource"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/.well-known/oauth-authorization-server"
+  to = "https://mcpgame.netlify.app/.well-known/oauth-authorization-server"
+  status = 200
+  force = true
+
 # Legacy posts: serve both URLs (don't break cached 301s)
 [[redirects]]
   from = "/blog/cubicles-for-agents"
