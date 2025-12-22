@@ -12,6 +12,7 @@ export default {
     return [
       "/",
       "/blog",
+      "/happyholidays2025",
       "/rss.xml",
       "/atom.xml",
       "/feed.json",
