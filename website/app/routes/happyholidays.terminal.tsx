@@ -327,7 +327,7 @@ TIPS
             rel="noopener noreferrer"
             className="text-[#6272a4] hover:text-[#8be9fd] transition-colors"
           >
-            @gricha_91
+            Follow me on X
           </a>
         </div>
       </div>
