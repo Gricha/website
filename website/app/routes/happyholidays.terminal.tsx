@@ -190,7 +190,7 @@ export default function HolidayTerminal() {
 
 GAME COMMANDS
     look              Look around your current location
-    go <direction>    Move (north, south, east, west, or room name)
+    go <location>     Move to a room or location (e.g., kitchen, outside)
     take <item>       Pick up an item
     use <item>        Use or interact with an item
     examine <item>    Look closely at something

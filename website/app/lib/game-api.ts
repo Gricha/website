@@ -215,7 +215,7 @@ export async function handleGameCommand(req: GameRequest): Promise<GameResponse>
         model: "gemini-3-flash-preview",
         tools: [{ functionDeclarations: geminiTools }],
         systemInstruction:
-          "You are a text adventure game command parser. Parse the player's natural language input and call the appropriate game tool. Common mappings: 'start'/'begin' → start_game, 'look'/'l' → look, 'go X'/'walk to X' → go (direction can be cardinal like north/south or room names like bedroom/kitchen), 'take X'/'get X'/'grab X'/'pick up X' → take, 'use X'/'use X on Y'/'put on X'/'wear X'/'build X'/'open X' → use (treat 'put on', 'wear', 'build', and 'open' as using/interacting with an item or target), 'examine X'/'look at X'/'x X' → examine, 'talk to X' → talk, 'i'/'inventory' → inventory. Always call a tool - pick the closest match for the player's intent.",
+          "You are a text adventure game command parser. Parse the player's natural language input and call the appropriate game tool. Common mappings: 'start'/'begin' → start_game, 'look'/'l' → look, 'go X'/'walk to X' → go (use room/location names like bedroom, kitchen, outside), 'take X'/'get X'/'grab X'/'pick up X' → take, 'use X'/'use X on Y'/'put on X'/'wear X'/'build X'/'open X' → use (treat 'put on', 'wear', 'build', and 'open' as using/interacting with an item or target), 'examine X'/'look at X'/'x X' → examine, 'talk to X' → talk, 'i'/'inventory' → inventory. Always call a tool - pick the closest match for the player's intent.",
       });
 
       const chat = model.startChat({
