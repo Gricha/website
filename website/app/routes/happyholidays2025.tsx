@@ -183,7 +183,16 @@ const cliTools: TabItem[] = [
     id: "opencode",
     label: "OpenCode",
     icon: <TerminalIcon />,
-    code: `opencode mcp add ${MCP_SERVER_NAME} --url ${MCP_SERVER_URL}`,
+    code: `# Add to ~/.config/opencode/opencode.json (see https://opencode.ai/docs/config/)
+{
+  "mcp": {
+    "${MCP_SERVER_NAME}": {
+      "type": "remote",
+      "url": "${MCP_SERVER_URL}",
+      "enabled": true
+    }
+  }
+}`,
   },
   {
     id: "codex",
