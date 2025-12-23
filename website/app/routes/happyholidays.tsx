@@ -60,7 +60,7 @@ function CopyButton({ text, label }: { text: string; label?: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="absolute top-3 right-3 px-2.5 py-1 text-xs font-mono tracking-wide bg-slate-700/80 hover:bg-slate-600 text-slate-300 rounded border border-slate-600/50 transition-all duration-300 hover:border-slate-500"
+      className="absolute top-3 right-3 px-2.5 py-1 text-xs font-mono tracking-wide bg-slate-300 hover:bg-slate-400 text-slate-700 dark:bg-slate-700/80 dark:hover:bg-slate-600 dark:text-slate-300 rounded border border-slate-400 dark:border-slate-600/50 transition-all duration-300 hover:border-slate-500"
     >
       {copied ? "Copied" : label || "Copy"}
     </button>
@@ -70,10 +70,10 @@ function CopyButton({ text, label }: { text: string; label?: string }) {
 function CodeBlock({ code }: { code: string }) {
   return (
     <div
-      className="relative group"
+      className="relative group not-prose"
       style={{ animation: "fadeInUp 0.5s ease-out 0.3s backwards" }}
     >
-      <pre className="bg-slate-900 dark:bg-slate-950 text-slate-100 p-5 rounded-lg overflow-x-auto text-sm font-mono border border-slate-700/50 dark:border-slate-800">
+      <pre className="bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 p-5 rounded-lg overflow-x-auto text-sm font-mono border border-slate-300 dark:border-slate-700">
         <code>{code}</code>
       </pre>
       <CopyButton text={code} />
@@ -94,18 +94,18 @@ function TabbedCodeBlock({ tabs }: { tabs: TabItem[] }) {
 
   return (
     <div
-      className="rounded-lg overflow-hidden border border-slate-700/50 dark:border-slate-800"
+      className="rounded-lg overflow-hidden border border-slate-300 dark:border-slate-700 not-prose"
       style={{ animation: "fadeInUp 0.5s ease-out 0.3s backwards" }}
     >
-      <div className="flex bg-slate-800/80 dark:bg-slate-900 overflow-x-auto">
+      <div className="flex bg-slate-200 dark:bg-slate-900 overflow-x-auto">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-2 px-4 py-3 text-sm font-medium whitespace-nowrap transition-all duration-300 border-b-2 ${
               activeTab === tab.id
-                ? "bg-slate-900 dark:bg-slate-950 text-white border-blue-500"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent"
+                ? "bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-white border-blue-500"
+                : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-300/50 dark:hover:bg-slate-700/30 border-transparent"
             }`}
           >
             {tab.icon && <span className="w-4 h-4 opacity-70">{tab.icon}</span>}
@@ -116,7 +116,7 @@ function TabbedCodeBlock({ tabs }: { tabs: TabItem[] }) {
 
       {activeTabData && (
         <div className="relative">
-          <pre className="bg-slate-900 dark:bg-slate-950 text-slate-100 p-5 overflow-x-auto text-sm font-mono">
+          <pre className="bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 p-5 overflow-x-auto text-sm font-mono">
             <code>{activeTabData.code}</code>
           </pre>
           <CopyButton text={activeTabData.code} />
