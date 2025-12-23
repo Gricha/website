@@ -13,6 +13,7 @@ export default {
       "/",
       "/blog",
       "/happyholidays2025",
+      "/happyholidays/terminal",
       "/rss.xml",
       "/atom.xml",
       "/feed.json",
