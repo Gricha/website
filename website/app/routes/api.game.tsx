@@ -1,14 +1,35 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const MCP_SERVER_URL = "https://gricha.dev/happyholidays/mcp";
+const MCP_SERVER_URL = process.env.MCP_SERVER_URL || "https://gricha.dev/happyholidays/mcp";
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY!);
 
-async function initializeMcpSession(): Promise<string | null> {
+const MCP_HEADERS = {
+  "Content-Type": "application/json",
+  "Accept": "application/json, text/event-stream",
+};
+
+interface McpTool {
+  name: string;
+  description?: string;
+  inputSchema?: {
+    type: string;
+    properties?: Record<string, unknown>;
+    required?: string[];
+  };
+}
+
+interface McpSession {
+  sessionId: string;
+  tools: McpTool[];
+}
+
+async function initializeMcpSession(): Promise<McpSession | null> {
   try {
-    const response = await fetch(MCP_SERVER_URL, {
+    // Initialize session
+    const initResponse = await fetch(MCP_SERVER_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: MCP_HEADERS,
       body: JSON.stringify({
         jsonrpc: "2.0",
         method: "initialize",
@@ -20,11 +41,53 @@ async function initializeMcpSession(): Promise<string | null> {
         id: 1,
       }),
     });
-    const sessionId = response.headers.get("mcp-session-id");
-    await response.json();
-    return sessionId;
+    const sessionId = initResponse.headers.get("mcp-session-id");
+    await initResponse.json();
+
+    if (!sessionId) return null;
+
+    // Fetch available tools
+    const toolsResponse = await fetch(MCP_SERVER_URL, {
+      method: "POST",
+      headers: {
+        ...MCP_HEADERS,
+        "Mcp-Session-Id": sessionId,
+      },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        method: "tools/list",
+        params: {},
+        id: 2,
+      }),
+    });
+    const toolsData = await toolsResponse.json();
+    const tools: McpTool[] = toolsData.result?.tools || [];
+
+    return { sessionId, tools };
   } catch {
     return null;
+  }
+}
+
+async function listMcpTools(sessionId: string): Promise<McpTool[]> {
+  try {
+    const response = await fetch(MCP_SERVER_URL, {
+      method: "POST",
+      headers: {
+        ...MCP_HEADERS,
+        "Mcp-Session-Id": sessionId,
+      },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        method: "tools/list",
+        params: {},
+        id: Date.now(),
+      }),
+    });
+    const data = await response.json();
+    return data.result?.tools || [];
+  } catch {
+    return [];
   }
 }
 
@@ -37,7 +100,7 @@ async function callMcpTool(
     const response = await fetch(MCP_SERVER_URL, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        ...MCP_HEADERS,
         "Mcp-Session-Id": sessionId,
       },
       body: JSON.stringify({
@@ -64,36 +127,38 @@ async function callMcpTool(
   }
 }
 
-const ERROR_MESSAGE =
-  "I didn't understand that command. Please try again with a game action like 'look', 'go north', 'take item', or 'start'.";
+// Convert MCP tool schema to Gemini function declaration
+function mcpToolToGeminiFunction(tool: McpTool) {
+  const properties: Record<string, unknown> = {};
+  const required: string[] = [];
 
-const gameTools = [
-  {
-    name: "game",
-    description:
-      "Execute a game command. action is required. For 'go' also provide direction. For 'take'/'use'/'examine' also provide target. For 'talk' provide character name.",
+  if (tool.inputSchema?.properties) {
+    for (const [key, value] of Object.entries(tool.inputSchema.properties)) {
+      const prop = value as { type?: string; description?: string };
+      properties[key] = {
+        type: prop.type || "string",
+        description: prop.description || "",
+      };
+    }
+  }
+
+  if (tool.inputSchema?.required) {
+    required.push(...tool.inputSchema.required);
+  }
+
+  return {
+    name: tool.name,
+    description: tool.description || "",
     parameters: {
       type: "object",
-      properties: {
-        action: {
-          type: "string",
-          enum: ["start_game", "look", "go", "take", "use", "examine", "talk", "inventory", "status", "unknown"],
-          description: "The game action: start_game, look, go, take, use, examine, talk, inventory, status",
-        },
-        direction: {
-          type: "string",
-          enum: ["north", "south", "east", "west"],
-          description: "Direction for 'go' action",
-        },
-        target: {
-          type: "string",
-          description: "Item/person name for take/use/examine/talk/look actions",
-        },
-      },
-      required: ["action"],
+      properties,
+      required,
     },
-  },
-];
+  };
+}
+
+const ERROR_MESSAGE =
+  "I didn't understand that command. Try 'look', 'go <direction>', 'take <item>', 'use <item>', or 'start'.";
 
 interface HistoryEntry {
   role: "user" | "model";
@@ -108,27 +173,41 @@ export async function action({ request }: { request: Request }) {
   };
 
   let sessionId = existingSessionId;
+  let tools: McpTool[] = [];
+
   if (!sessionId) {
-    sessionId = await initializeMcpSession();
-    if (!sessionId) {
+    const session = await initializeMcpSession();
+    if (!session) {
       return Response.json(
         { error: "Failed to connect to game server" },
         { status: 500 }
       );
     }
+    sessionId = session.sessionId;
+    tools = session.tools;
+  } else {
+    tools = await listMcpTools(sessionId);
+  }
+
+  if (tools.length === 0) {
+    return Response.json(
+      { error: "No game tools available" },
+      { status: 500 }
+    );
   }
 
   try {
+    const geminiTools = tools.map(mcpToolToGeminiFunction);
+
     const model = genAI.getGenerativeModel({
       model: "gemini-3-flash-preview",
-      tools: [{ functionDeclarations: gameTools }],
+      tools: [{ functionDeclarations: geminiTools }],
       systemInstruction:
-        "Parse the player's text adventure command and call the game function. Map: 'start'/'begin' to start_game, 'look'/'l' to look, 'go north'/'n'/'north' to go+direction, 'take X'/'get X'/'grab X' to take+target, 'use X' to use+target, 'examine X'/'x X' to examine+target, 'talk to X' to talk+target, 'i'/'inventory' to inventory, 'status' to status. For unclear commands use action=unknown. Use conversation history for context if user refers to previous commands.",
+        "You are a text adventure game command parser. Parse the player's natural language input and call the appropriate game tool. Common mappings: 'start'/'begin' → start_game, 'look'/'l' → look, 'go X'/'walk to X' → go (direction can be cardinal like north/south or room names like bedroom/kitchen), 'take X'/'get X'/'grab X'/'pick up X' → take, 'use X'/'use X on Y' → use, 'examine X'/'look at X'/'x X' → examine, 'talk to X' → talk, 'i'/'inventory' → inventory. Always call a tool - pick the closest match for the player's intent.",
     });
 
-    // Use chat for multi-turn context
     const chat = model.startChat({
-      history: history.slice(-10), // Keep last 10 exchanges for context
+      history: history.slice(-10),
     });
 
     const result = await chat.sendMessage(command);
@@ -142,36 +221,11 @@ export async function action({ request }: { request: Request }) {
       });
     }
 
-    const { action: gameAction, direction, target } = functionCall.args as {
-      action: string;
-      direction?: string;
-      target?: string;
-    };
+    const toolName = functionCall.name;
+    const args = (functionCall.args || {}) as Record<string, unknown>;
 
-    if (gameAction === "unknown") {
-      return Response.json({
-        response: ERROR_MESSAGE,
-        sessionId,
-      });
-    }
-
-    // Build args based on action type
-    const args: Record<string, string | number> = {};
-    if (gameAction === "go" && direction) {
-      args.direction = direction;
-    } else if (gameAction === "look" && target) {
-      args.target = target;
-    } else if (gameAction === "take" && target) {
-      args.item = target;
-    } else if (gameAction === "use" && target) {
-      args.item = target;
-    } else if (gameAction === "examine" && target) {
-      args.target = target;
-    } else if (gameAction === "talk" && target) {
-      args.character = target;
-    }
-
-    const gameResponse = await callMcpTool(sessionId, gameAction, args);
+    console.log(`MCP call: ${toolName}`, args);
+    const gameResponse = await callMcpTool(sessionId, toolName, args);
 
     return Response.json({
       response: gameResponse || ERROR_MESSAGE,

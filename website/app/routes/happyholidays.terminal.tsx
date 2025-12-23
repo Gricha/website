@@ -1,12 +1,31 @@
 import type { Route } from "./+types/happyholidays.terminal";
 import { useState, useRef, useEffect } from "react";
 
+const SESSION_COOKIE_NAME = "mcp_session_id";
+const COOKIE_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
+
+function getCookie(name: string): string | null {
+  if (typeof document === "undefined") return null;
+  const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
+  return match ? decodeURIComponent(match[2]) : null;
+}
+
+function setCookie(name: string, value: string, maxAge: number): void {
+  if (typeof document === "undefined") return;
+  document.cookie = `${name}=${encodeURIComponent(value)}; path=/; max-age=${maxAge}; SameSite=Lax`;
+}
+
+function clearCookie(name: string): void {
+  if (typeof document === "undefined") return;
+  document.cookie = `${name}=; path=/; max-age=0`;
+}
+
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Holiday Terminal | gricha.dev" },
     {
       name: "description",
-      content: "Play Rudolph's Missing Nose - A Zork-style text adventure",
+      content: "A holiday text adventure game",
     },
   ];
 }
@@ -62,36 +81,65 @@ export default function HolidayTerminal() {
     return () => clearInterval(interval);
   }, [isLoading]);
 
-  // Initialize on mount
+  // Initialize on mount - restore session or start fresh
   useEffect(() => {
-    setLines([
-      { type: "system", content: "Connecting to North Pole servers..." },
-    ]);
+    const savedSessionId = getCookie(SESSION_COOKIE_NAME);
 
-    // Just show the welcome message - session will be created on first command
-    setTimeout(() => {
-      setLines([
-        { type: "system", content: "Connected!" },
-        { type: "system", content: "" },
-        {
-          type: "output",
-          content: `+------------------------------------------+
-|                                          |
-|     RUDOLPH'S MISSING NOSE               |
-|     A Holiday Text Adventure             |
-|                                          |
-+------------------------------------------+`,
-        },
-        { type: "system", content: "" },
-        {
-          type: "output",
-          content:
-            'Type "start" to begin your adventure, or "help" for commands.',
-        },
+    setLines([{ type: "system", content: "Connecting..." }]);
+    setIsLoading(true);
+
+    const startFresh = async () => {
+      const result = await sendCommand("start", null, []);
+      setSessionId(result.sessionId);
+      setHistory([
+        { role: "user", parts: [{ text: "start" }] },
+        { role: "model", parts: [{ text: result.response }] },
       ]);
+      setLines([{ type: "output", content: result.response }]);
+    };
+
+    const initialize = async () => {
+      try {
+        if (savedSessionId) {
+          // Try to restore session
+          setSessionId(savedSessionId);
+          const result = await sendCommand("look", savedSessionId, []);
+          // Check if response indicates invalid session
+          if (result.response.includes("not found") || result.response.includes("Error")) {
+            clearCookie(SESSION_COOKIE_NAME);
+            await startFresh();
+          } else {
+            setSessionId(result.sessionId);
+            setLines([{ type: "output", content: result.response }]);
+          }
+        } else {
+          await startFresh();
+        }
+      } catch (error) {
+        // If restore fails, try fresh start
+        clearCookie(SESSION_COOKIE_NAME);
+        try {
+          await startFresh();
+        } catch {
+          setLines([
+            { type: "error", content: `Failed to connect: ${error instanceof Error ? error.message : "Unknown error"}` },
+            { type: "output", content: 'Type "start" to try again.' },
+          ]);
+        }
+      }
+      setIsLoading(false);
       setIsReady(true);
-    }, 500);
+    };
+
+    initialize();
   }, []);
+
+  // Save session ID to cookie when it changes
+  useEffect(() => {
+    if (sessionId) {
+      setCookie(SESSION_COOKIE_NAME, sessionId, COOKIE_MAX_AGE);
+    }
+  }, [sessionId]);
 
   // Auto-scroll to bottom and keep focus
   useEffect(() => {
@@ -134,6 +182,7 @@ export default function HolidayTerminal() {
   use <item>  - Use an item
   inventory   - Check your inventory
   clear       - Clear the terminal
+  /restart    - Start a completely fresh session
 
 You can also type naturally - the AI will interpret your commands!`,
         },
@@ -144,6 +193,18 @@ You can also type naturally - the AI will interpret your commands!`,
 
     if (command.toLowerCase() === "clear") {
       setLines([]);
+      setIsLoading(false);
+      return;
+    }
+
+    if (command.toLowerCase() === "/restart") {
+      clearCookie(SESSION_COOKIE_NAME);
+      setSessionId(null);
+      setHistory([]);
+      setLines([
+        { type: "system", content: "Session cleared." },
+        { type: "output", content: 'Type "start" to begin a new adventure.' },
+      ]);
       setIsLoading(false);
       return;
     }
