@@ -26,8 +26,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   // Add posts to feed
   for (const post of posts) {
-    // Skip external posts or include them with external link
-    const postUrl = post.external || `${siteUrl}/blog/${post.slug}`;
+    // Handle external links, internal pages, and blog posts
+    const postUrl = post.external || (post.path ? `${siteUrl}${post.path}` : `${siteUrl}/blog/${post.slug}`);
 
     feed.addItem({
       title: post.title,

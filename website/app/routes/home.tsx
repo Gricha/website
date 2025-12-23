@@ -63,33 +63,38 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       <div className="space-y-1">
         {blogPosts.map((post, index) => {
           const isExternal = post.external;
+          const isInternalPage = post.path;
           const commonClassName = "group flex items-baseline text-xs py-3 px-0 transition-all duration-200 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/20 cursor-pointer border-l-2 border-transparent hover:border-emerald-500 hover:pl-3";
           const commonStyle = { animation: `fadeInUp 0.5s ease-out ${index * 0.1}s backwards` };
 
-          return isExternal ? (
-            <a
-              key={post.external}
-              href={post.external}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={commonClassName}
-              style={commonStyle}
-            >
-              <span className="text-gray-500 dark:text-gray-500 w-28 flex-shrink-0 text-[11px] tracking-wide group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-200">
-                {post.date}
-              </span>
-              <span className="text-gray-800 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors duration-200 text-sm">
-                {post.title}
-                <svg className="inline-block w-3 h-3 ml-1 opacity-40 group-hover:opacity-100 transition-opacity" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
-                  <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
-                </svg>
-              </span>
-            </a>
-          ) : (
+          if (isExternal) {
+            return (
+              <a
+                key={post.external}
+                href={post.external}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={commonClassName}
+                style={commonStyle}
+              >
+                <span className="text-gray-500 dark:text-gray-500 w-28 flex-shrink-0 text-[11px] tracking-wide group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-200">
+                  {post.date}
+                </span>
+                <span className="text-gray-800 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors duration-200 text-sm">
+                  {post.title}
+                  <svg className="inline-block w-3 h-3 ml-1 opacity-40 group-hover:opacity-100 transition-opacity" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                    <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+                  </svg>
+                </span>
+              </a>
+            );
+          }
+
+          return (
             <Link
-              key={post.slug}
-              to={`/blog/${post.slug}`}
+              key={post.path || post.slug}
+              to={isInternalPage ? post.path! : `/blog/${post.slug}`}
               className={commonClassName}
               style={commonStyle}
             >

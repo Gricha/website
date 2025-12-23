@@ -10,6 +10,7 @@ export interface BlogPost {
   excerpt?: string;
   content: string;
   external?: string;
+  path?: string; // For internal non-blog pages (e.g., /happyholidays)
 }
 
 const postsDirectory = path.join(process.cwd(), 'posts');
@@ -35,8 +36,17 @@ export async function getAllPosts(): Promise<BlogPost[]> {
       };
     });
 
-  // External posts (hardcoded for now)
-  const externalPosts: BlogPost[] = [
+  // Special posts (internal pages and external links)
+  const specialPosts: BlogPost[] = [
+    {
+      slug: '',
+      path: '/happyholidays',
+      date: 'December 23, 2025',
+      title: 'Happy Holidays 2025',
+      author: 'Greg Pstrucha & Jeremy Stanley',
+      excerpt: 'A text-based holiday adventure game you can play through MCP or in the browser.',
+      content: ''
+    },
     {
       slug: '',
       external: 'https://engineering.fb.com/2016/04/13/ios/automatic-memory-leak-detection-on-ios/',
@@ -61,7 +71,7 @@ export async function getAllPosts(): Promise<BlogPost[]> {
   };
 
   // Combine and sort by date (most recent first)
-  return [...markdownPosts, ...externalPosts].sort(
+  return [...markdownPosts, ...specialPosts].sort(
     (a, b) => parseDate(b.date) - parseDate(a.date)
   );
 }

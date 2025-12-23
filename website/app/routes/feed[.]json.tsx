@@ -26,7 +26,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   // Add posts to feed
   for (const post of posts) {
-    const postUrl = post.external || `${siteUrl}/blog/${post.slug}`;
+    const postUrl = post.external || (post.path ? `${siteUrl}${post.path}` : `${siteUrl}/blog/${post.slug}`);
 
     feed.addItem({
       title: post.title,
