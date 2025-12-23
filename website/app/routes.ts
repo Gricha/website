@@ -9,6 +9,9 @@ export default [
   // Full-screen routes (no site layout)
   route("happyholidays/terminal", "routes/happyholidays.terminal.tsx"),
 
+  // API routes
+  route("api/game", "routes/api.game.tsx"),
+
   // Standard site layout routes
   layout("routes/_layout.tsx", [
     index("routes/home.tsx"),
