@@ -290,26 +290,23 @@ TIPS
         ))}
 
         {/* Input line */}
-        {isLoading ? (
-          <div className="flex items-center">
-            <span className="text-[#6272a4] mr-2">{SPINNER_FRAMES[spinnerFrame]}</span>
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="flex items-center">
-            <span className="text-[#50fa7b] mr-2">{">"}</span>
-            <input
-              ref={inputRef}
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              disabled={!isReady}
-              className="flex-1 bg-transparent text-[#f8f8f2] outline-none caret-[#50fa7b]"
-              autoFocus
-              spellCheck={false}
-              autoComplete="off"
-            />
-          </form>
-        )}
+        <form onSubmit={handleSubmit} className="flex items-center">
+          <span className={`mr-2 ${isLoading ? "text-[#6272a4]" : "text-[#50fa7b]"}`}>
+            {isLoading ? SPINNER_FRAMES[spinnerFrame] : ">"}
+          </span>
+          <input
+            ref={inputRef}
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            disabled={!isReady}
+            maxLength={60}
+            className={`flex-1 bg-transparent outline-none ${isLoading ? "text-[#6272a4] caret-[#6272a4]" : "text-[#f8f8f2] caret-[#50fa7b]"}`}
+            autoFocus
+            spellCheck={false}
+            autoComplete="off"
+          />
+        </form>
       </div>
 
       {/* Footer */}
