@@ -81,51 +81,62 @@ export default function HolidayTerminal() {
     return () => clearInterval(interval);
   }, [isLoading]);
 
-  // Initialize on mount - restore session or start fresh
+  // Initialize on mount - always show greeting, then restore session if exists
   useEffect(() => {
     const savedSessionId = getCookie(SESSION_COOKIE_NAME);
 
     setLines([{ type: "system", content: "Connecting..." }]);
     setIsLoading(true);
 
-    const startFresh = async () => {
-      const result = await sendCommand("start", null, []);
-      setSessionId(result.sessionId);
-      setHistory([
-        { role: "user", parts: [{ text: "start" }] },
-        { role: "model", parts: [{ text: result.response }] },
-      ]);
-      setLines([{ type: "output", content: result.response }]);
-    };
-
     const initialize = async () => {
       try {
+        // Always get the greeting first
+        const startResult = await sendCommand("start", null, []);
+        const greeting = startResult.response;
+
         if (savedSessionId) {
-          // Try to restore session
-          setSessionId(savedSessionId);
-          const result = await sendCommand("look", savedSessionId, []);
-          // Check if response indicates invalid session
-          if (result.response.includes("not found") || result.response.includes("Error")) {
+          // Try to restore existing session
+          const lookResult = await sendCommand("look", savedSessionId, []);
+
+          // Check if session is still valid
+          if (lookResult.response.includes("not found") || lookResult.response.includes("Error")) {
+            // Invalid session, just use the fresh start
             clearCookie(SESSION_COOKIE_NAME);
-            await startFresh();
+            setSessionId(startResult.sessionId);
+            setHistory([
+              { role: "user", parts: [{ text: "start" }] },
+              { role: "model", parts: [{ text: greeting }] },
+            ]);
+            setLines([{ type: "output", content: greeting }]);
           } else {
-            setSessionId(result.sessionId);
-            setLines([{ type: "output", content: result.response }]);
+            // Valid session - show greeting, separator, then current state
+            setSessionId(lookResult.sessionId);
+            setHistory([
+              { role: "user", parts: [{ text: "look" }] },
+              { role: "model", parts: [{ text: lookResult.response }] },
+            ]);
+            setLines([
+              { type: "output", content: greeting },
+              { type: "system", content: "─".repeat(40) },
+              { type: "system", content: "Resuming your adventure..." },
+              { type: "system", content: "─".repeat(40) },
+              { type: "output", content: lookResult.response },
+            ]);
           }
         } else {
-          await startFresh();
+          // No saved session, just start fresh
+          setSessionId(startResult.sessionId);
+          setHistory([
+            { role: "user", parts: [{ text: "start" }] },
+            { role: "model", parts: [{ text: greeting }] },
+          ]);
+          setLines([{ type: "output", content: greeting }]);
         }
       } catch (error) {
-        // If restore fails, try fresh start
-        clearCookie(SESSION_COOKIE_NAME);
-        try {
-          await startFresh();
-        } catch {
-          setLines([
-            { type: "error", content: `Failed to connect: ${error instanceof Error ? error.message : "Unknown error"}` },
-            { type: "output", content: 'Type "start" to try again.' },
-          ]);
-        }
+        setLines([
+          { type: "error", content: `Failed to connect: ${error instanceof Error ? error.message : "Unknown error"}` },
+          { type: "output", content: 'Type "start" to try again.' },
+        ]);
       }
       setIsLoading(false);
       setIsReady(true);
