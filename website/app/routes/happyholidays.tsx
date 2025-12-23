@@ -208,17 +208,19 @@ const cliTools: TabItem[] = [
   },
 ];
 
-const introContent = `We have created a text-based, escape-room style adventure game themed for the holidays. You can play it over the MCP server. Below are the instructions.
+const introContent = `We have created a text-based, escape-room style adventure game themed for the holidays. You can play it directly over an MCP client with your agent of choice.
 
 It is also possible to [play the game in the browser](/happyholidays/terminal) if you'd prefer. But you won't get your powerful LLM assistant to help you if things get trickier :)`;
 
-const contextContent = `The original idea was inspired by [ZORK](https://en.wikipedia.org/wiki/Zork) — a text-based adventure game from the 70s where as a player you explore the underground empire in search for treasures.
+const contextContent = `The idea was inspired by [ZORK](https://en.wikipedia.org/wiki/Zork) — a text-based adventure game from the 70s where as a player you explore the underground empire in search for treasures. This is a much simpler game that offers a bit of a holiday-themed adventure while focusing on exploring MCP as the interface.
 
-I wanted to experiment with enabling the gameplay through MCP. Mainly, because it's goofy, and that's pretty high on my list of values. But it also has interesting properties that I've noticed when play testing the game.
+MCP being the protocol of choice isn't that important, but it allows for the interesting mechanic where you can pretty easily add the game to your code assistant of choice and have the actual LLM be a player, or just help you a bit throughout the play through. It's also goofy and I like it.
 
-My first observation, and that is pretty obvious in retrospect, is that unless stopped, Claude Code or Codex was rushing to finish the game without my input. I had to stop it and tell it that I'm the lead and the agent is my interpreter and interface.
+I have created a simpler way of playing the game in the browser as I recognize that adding a full on MCP server to your private workspace can be a bit much (sandbox people!). You can check it out [here](/happyholidays/terminal). There an LLM sits in between you and the MCP server and tries to coerce your request into the right shape. It's simpler, it can't just go on it's own, but it works.
 
-The other thing you notice is that having an LLM as the interface to the game means some slop inside the game engine is more forgivable. The API doesn't have to be *that* easy to use because the LLM doesn't get frustrated if the command that feels like it should work, just doesn't.
+The observation I had was that unless stopped, Claude Code or Codex would rush to finish the game without my input. I had to stop it and tell it that I'm the lead and the agent is my interpreter and interface.
+
+The other thing you notice is that having an LLM as the interface to the game means some slop inside the game engine is more forgivable. The API doesn't have to be _that_ easy to use because the LLM doesn't get frustrated if the command that feels like it should work, just doesn't.
 
 If you are too locked in and busy but would still like to see how the game plays out, fear not — just ask your LLM of choice to win the game for you and summarize the story!`;
 
@@ -319,6 +321,18 @@ export default function HappyHolidays2025() {
           </div>
         </header>
 
+        {/* Hero Image */}
+        <div
+          className="mb-12 rounded-lg overflow-hidden"
+          style={{ animation: "fadeInUp 0.5s ease-out 0.15s backwards" }}
+        >
+          <img
+            src="/snowday.webp"
+            alt="A cozy snowy holiday scene"
+            className="w-full h-auto"
+          />
+        </div>
+
         {/* One-Click Installs */}
         <section className="mb-12">
           <SectionHeader delay={0.2}>Install with One Click</SectionHeader>
@@ -371,30 +385,6 @@ export default function HappyHolidays2025() {
   }
 }`}
           />
-
-          <div
-            className="mt-5 p-4 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-lg"
-            style={{ animation: "fadeInUp 0.5s ease-out 0.5s backwards" }}
-          >
-            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Configuration file locations
-            </p>
-            <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1.5 font-mono">
-              <li className="flex items-start gap-2">
-                <span className="text-slate-400 select-none">~</span>
-                <code className="text-xs bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
-                  ~/Library/Application
-                  Support/Claude/claude_desktop_config.json
-                </code>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-slate-400 select-none">~</span>
-                <code className="text-xs bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
-                  ~/.cursor/mcp.json
-                </code>
-              </li>
-            </ul>
-          </div>
         </section>
 
         {/* Context */}
