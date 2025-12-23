@@ -310,22 +310,26 @@ TIPS
       </div>
 
       {/* Footer */}
-      <div className="px-4 py-2 border-t border-[#222] text-center flex items-center justify-center gap-3 text-xs">
-        <a
-          href="/happyholidays"
-          className="text-[#6272a4] hover:text-[#8be9fd] transition-colors"
-        >
-          Play the game with MCP
-        </a>
-        <span className="text-[#444]">|</span>
-        <a
-          href="https://x.com/gricha_91"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-[#6272a4] hover:text-[#8be9fd] transition-colors"
-        >
-          Follow me on X
-        </a>
+      <div className="px-4 py-2 border-t border-[#222] flex items-center justify-center text-xs">
+        <div className="flex items-center gap-3">
+          <span className="text-[#6272a4]">Type "help" for commands</span>
+          <span className="text-[#444]">|</span>
+          <a
+            href="/happyholidays"
+            className="text-[#6272a4] hover:text-[#8be9fd] transition-colors"
+          >
+            Play with MCP
+          </a>
+          <span className="text-[#444]">|</span>
+          <a
+            href="https://x.com/gricha_91"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#6272a4] hover:text-[#8be9fd] transition-colors"
+          >
+            @gricha_91
+          </a>
+        </div>
       </div>
     </div>
   );
