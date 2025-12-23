@@ -1,4 +1,4 @@
-import type { Route } from "./+types/happyholidays2025";
+import type { Route } from "./+types/happyholidays";
 import { useState } from "react";
 import { SocialsIconsOnly } from "../components/SocialsIconsOnly";
 import ReactMarkdown from "react-markdown";

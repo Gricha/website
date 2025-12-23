@@ -17,7 +17,7 @@ export default [
     index("routes/home.tsx"),
     route("blog", "routes/blog.tsx"),
     route("blog/:slug", "routes/blog.$slug.tsx"),
-    route("happyholidays2025", "routes/happyholidays2025.tsx"),
+    route("happyholidays", "routes/happyholidays.tsx"),
     route("rss.xml", "routes/rss[.]xml.tsx"),
     route("atom.xml", "routes/atom[.]xml.tsx"),
     route("feed.json", "routes/feed[.]json.tsx"),

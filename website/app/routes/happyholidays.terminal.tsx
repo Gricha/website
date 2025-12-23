@@ -169,24 +169,55 @@ export default function HolidayTerminal() {
     inputRef.current?.focus();
 
     // Handle local commands
-    if (command.toLowerCase() === "help") {
+    if (command.toLowerCase() === "help" || command.toLowerCase() === "/help") {
       setLines((prev) => [
         ...prev,
         {
           type: "output",
-          content: `Available commands:
-  start       - Begin or restart the game
-  look        - Look around your current location
-  go <dir>    - Move in a direction (north, south, east, west)
-  take <item> - Pick up an item
-  use <item>  - Use an item
-  inventory   - Check your inventory
-  clear       - Clear the terminal
-  /restart    - Start a completely fresh session
+          content: `USAGE
+    <command> [arguments]
 
-You can also type naturally - the AI will interpret your commands!`,
+GAME COMMANDS
+    look              Look around your current location
+    go <direction>    Move (north, south, east, west, or room name)
+    take <item>       Pick up an item
+    use <item>        Use or interact with an item
+    examine <item>    Look closely at something
+    inventory         Check what you're carrying
+    hint              Get a hint if you're stuck
+
+SYSTEM COMMANDS
+    restart           Start a new game from the beginning
+    clear             Clear the terminal screen
+    help              Show this help message
+
+TIPS
+    You can type naturally - "pick up the key" works just as well as "take key"`,
         },
       ]);
+      setIsLoading(false);
+      return;
+    }
+
+    if (command.toLowerCase() === "restart") {
+      clearCookie(SESSION_COOKIE_NAME);
+      setSessionId(null);
+      setHistory([]);
+      setLines([{ type: "system", content: "Starting new game..." }]);
+      try {
+        const result = await sendCommand("start", null, []);
+        setSessionId(result.sessionId);
+        setHistory([
+          { role: "user", parts: [{ text: "start" }] },
+          { role: "model", parts: [{ text: result.response }] },
+        ]);
+        setLines([{ type: "output", content: result.response }]);
+      } catch {
+        setLines((prev) => [
+          ...prev,
+          { type: "error", content: "Failed to start new game. Try again." },
+        ]);
+      }
       setIsLoading(false);
       return;
     }
@@ -197,17 +228,6 @@ You can also type naturally - the AI will interpret your commands!`,
       return;
     }
 
-    if (command.toLowerCase() === "/restart") {
-      clearCookie(SESSION_COOKIE_NAME);
-      setSessionId(null);
-      setHistory([]);
-      setLines([
-        { type: "system", content: "Session cleared." },
-        { type: "output", content: 'Type "start" to begin a new adventure.' },
-      ]);
-      setIsLoading(false);
-      return;
-    }
 
     try {
       const result = await sendCommand(command, sessionId, history);
@@ -284,7 +304,7 @@ You can also type naturally - the AI will interpret your commands!`,
       {/* Footer */}
       <div className="px-4 py-2 border-t border-[#222] text-center flex items-center justify-center gap-3 text-xs">
         <a
-          href="/happyholidays2025"
+          href="/happyholidays"
           className="text-[#6272a4] hover:text-[#8be9fd] transition-colors"
         >
           Play the game with MCP

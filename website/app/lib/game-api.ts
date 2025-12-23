@@ -9,6 +9,17 @@ const MCP_HEADERS = {
   "Accept": "application/json, text/event-stream",
 };
 
+const REQUEST_TIMEOUT_MS = 10000;
+const MAX_RETRIES = 2;
+const FRIENDLY_ERROR = "Oops! Something went wrong on our end. Please try again.";
+
+async function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  const timeout = new Promise<never>((_, reject) =>
+    setTimeout(() => reject(new Error("Request timed out")), ms)
+  );
+  return Promise.race([promise, timeout]);
+}
+
 interface McpTool {
   name: string;
   description?: string;
@@ -155,7 +166,7 @@ function mcpToolToGeminiFunction(tool: McpTool) {
 }
 
 const ERROR_MESSAGE =
-  "I didn't understand that command. Try 'look', 'go <direction>', 'take <item>', 'use <item>', or 'start'.";
+  "I didn't quite understand that. You can do things like 'look', 'go', 'take', 'use', or 'interact' with items. Type 'hint' if you're stuck!";
 
 interface HistoryEntry {
   role: "user" | "model";
@@ -176,50 +187,62 @@ export interface GameResponse {
 export async function handleGameCommand(req: GameRequest): Promise<GameResponse> {
   const { command, sessionId: existingSessionId, history = [] } = req;
 
-  let sessionId = existingSessionId;
-  let tools: McpTool[] = [];
+  let lastError: Error | null = null;
 
-  if (!sessionId) {
-    const session = await initializeMcpSession();
-    if (!session) {
-      throw new Error("Failed to connect to game server");
+  for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+    try {
+      let sessionId = existingSessionId;
+      let tools: McpTool[] = [];
+
+      if (!sessionId) {
+        const session = await initializeMcpSession();
+        if (!session) {
+          throw new Error("Failed to connect to game server");
+        }
+        sessionId = session.sessionId;
+        tools = session.tools;
+      } else {
+        tools = await listMcpTools(sessionId);
+      }
+
+      if (tools.length === 0) {
+        throw new Error("No game tools available");
+      }
+
+      const geminiTools = tools.map(mcpToolToGeminiFunction);
+
+      const model = genAI.getGenerativeModel({
+        model: "gemini-3-flash-preview",
+        tools: [{ functionDeclarations: geminiTools }],
+        systemInstruction:
+          "You are a text adventure game command parser. Parse the player's natural language input and call the appropriate game tool. Common mappings: 'start'/'begin' → start_game, 'look'/'l' → look, 'go X'/'walk to X' → go (direction can be cardinal like north/south or room names like bedroom/kitchen), 'take X'/'get X'/'grab X'/'pick up X' → take, 'use X'/'use X on Y'/'put on X'/'wear X'/'build X'/'open X' → use (treat 'put on', 'wear', 'build', and 'open' as using/interacting with an item or target), 'examine X'/'look at X'/'x X' → examine, 'talk to X' → talk, 'i'/'inventory' → inventory. Always call a tool - pick the closest match for the player's intent.",
+      });
+
+      const chat = model.startChat({
+        history: history.slice(-10),
+      });
+
+      const result = await withTimeout(chat.sendMessage(command), REQUEST_TIMEOUT_MS);
+      const response = result.response;
+      const functionCall = response.functionCalls()?.[0];
+
+      if (!functionCall) {
+        return { response: ERROR_MESSAGE, sessionId };
+      }
+
+      const toolName = functionCall.name;
+      const args = (functionCall.args || {}) as Record<string, unknown>;
+
+      console.log(`MCP call: ${toolName}`, args);
+      const gameResponse = await callMcpTool(sessionId, toolName, args);
+
+      return { response: gameResponse || ERROR_MESSAGE, sessionId };
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+      console.error(`Attempt ${attempt + 1} failed:`, lastError.message);
     }
-    sessionId = session.sessionId;
-    tools = session.tools;
-  } else {
-    tools = await listMcpTools(sessionId);
   }
 
-  if (tools.length === 0) {
-    throw new Error("No game tools available");
-  }
-
-  const geminiTools = tools.map(mcpToolToGeminiFunction);
-
-  const model = genAI.getGenerativeModel({
-    model: "gemini-3-flash-preview",
-    tools: [{ functionDeclarations: geminiTools }],
-    systemInstruction:
-      "You are a text adventure game command parser. Parse the player's natural language input and call the appropriate game tool. Common mappings: 'start'/'begin' → start_game, 'look'/'l' → look, 'go X'/'walk to X' → go (direction can be cardinal like north/south or room names like bedroom/kitchen), 'take X'/'get X'/'grab X'/'pick up X' → take, 'use X'/'use X on Y'/'put on X'/'wear X'/'build X'/'open X' → use (treat 'put on', 'wear', 'build', and 'open' as using/interacting with an item or target), 'examine X'/'look at X'/'x X' → examine, 'talk to X' → talk, 'i'/'inventory' → inventory. Always call a tool - pick the closest match for the player's intent.",
-  });
-
-  const chat = model.startChat({
-    history: history.slice(-10),
-  });
-
-  const result = await chat.sendMessage(command);
-  const response = result.response;
-  const functionCall = response.functionCalls()?.[0];
-
-  if (!functionCall) {
-    return { response: ERROR_MESSAGE, sessionId };
-  }
-
-  const toolName = functionCall.name;
-  const args = (functionCall.args || {}) as Record<string, unknown>;
-
-  console.log(`MCP call: ${toolName}`, args);
-  const gameResponse = await callMcpTool(sessionId, toolName, args);
-
-  return { response: gameResponse || ERROR_MESSAGE, sessionId };
+  console.error("All retries failed:", lastError);
+  return { response: FRIENDLY_ERROR, sessionId: existingSessionId || "" };
 }

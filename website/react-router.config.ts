@@ -12,7 +12,7 @@ export default {
     return [
       "/",
       "/blog",
-      "/happyholidays2025",
+      "/happyholidays",
       "/happyholidays/terminal",
       "/rss.xml",
       "/atom.xml",
