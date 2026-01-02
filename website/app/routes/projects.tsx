@@ -39,6 +39,31 @@ const projects: Project[] = [
 
 const toys: Project[] = [
   {
+    name: "Sudoku GBA",
+    description: (
+      <>
+        A Sudoku game for Game Boy Advance, built with Rust and Claude.{" "}
+        <a
+          href="/sudoku/index.html"
+          className="text-emerald-600 dark:text-emerald-400 hover:underline"
+        >
+          Play in browser
+        </a>
+        . Features 700 puzzles, SRAM saves, and{" "}
+        <a
+          href="/sudoku/claude_ambient_masterpiece.wav"
+          className="text-emerald-600 dark:text-emerald-400 hover:underline"
+        >
+          AI-composed music
+        </a>
+        .
+      </>
+    ),
+    github: "https://github.com/Gricha/sudoku-gba",
+    tech: ["Rust", "GBA"],
+    year: "2026",
+  },
+  {
     name: "cogwork",
     description: (
       <>
