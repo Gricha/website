@@ -20,8 +20,8 @@ export default function Blog({ loaderData }: Route.ComponentProps) {
     <>
       {/* Title */}
       <div className="mb-10">
-        <h1 className="text-4xl font-semibold mb-3 text-gray-900 dark:text-white tracking-tight bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 dark:from-white dark:via-blue-200 dark:to-purple-200 bg-clip-text">
-          Blog
+        <h1 className="text-4xl font-semibold mb-3 text-gray-900 dark:text-gray-100 tracking-tight">
+          BLOG
         </h1>
         <div className="w-16 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
       </div>

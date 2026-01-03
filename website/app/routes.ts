@@ -15,6 +15,7 @@ export default [
   // Standard site layout routes
   layout("routes/_layout.tsx", [
     index("routes/home.tsx"),
+    route("projects", "routes/projects.tsx"),
     route("blog", "routes/blog.tsx"),
     route("blog/:slug", "routes/blog.$slug.tsx"),
     route("happyholidays", "routes/happyholidays.tsx"),

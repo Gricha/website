@@ -20,11 +20,11 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
   return (
     <>
-      <div className="mb-12">
-        <h2 className="text-6xl font-bold mb-4 text-gray-900 dark:text-gray-100 tracking-tight leading-none">
+      <div className="mb-10">
+        <h2 className="text-4xl font-semibold mb-3 text-gray-900 dark:text-gray-100 tracking-tight">
           ABOUT
         </h2>
-        <div className="w-24 h-1 bg-gradient-to-r from-emerald-500 to-amber-500"></div>
+        <div className="w-16 h-0.5 bg-gradient-to-r from-emerald-500 to-amber-500 rounded-full"></div>
       </div>
 
       <div className="mb-20 text-gray-700 dark:text-gray-300 leading-relaxed space-y-5 text-base">
@@ -51,12 +51,12 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         </p>
       </div>
 
-      {/* Posts section */}
-      <div className="mb-12">
-        <h2 className="text-6xl font-bold mb-4 text-gray-900 dark:text-gray-100 tracking-tight leading-none">
-          POSTS
+      {/* Writing section */}
+      <div className="mb-10">
+        <h2 className="text-4xl font-semibold mb-3 text-gray-900 dark:text-gray-100 tracking-tight">
+          WRITING
         </h2>
-        <div className="w-24 h-1 bg-gradient-to-r from-emerald-500 to-amber-500"></div>
+        <div className="w-16 h-0.5 bg-gradient-to-r from-emerald-500 to-amber-500 rounded-full"></div>
       </div>
 
       {/* Blog posts with improved hover states */}
