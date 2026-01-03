@@ -3,7 +3,7 @@ import type { Route } from "./+types/home";
 import { ExternalLink } from "../components/ExternalLink";
 import { getAllPosts } from "../utils/posts.server";
 
-export function meta({ }: Route.MetaArgs) {
+export function meta({}: Route.MetaArgs) {
   return [
     { title: "gricha.dev" },
     { name: "description", content: "Personal website" },
@@ -34,20 +34,33 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           className="w-48 h-48 rounded-lg object-cover border-2 border-gray-200 dark:border-gray-800 shadow-md float-right ml-6 mb-4"
         /> */}
         <p>
-          My name is Greg Pstrucha. I'm an engineer enjoying working on developer velocity and performance. I am a cofounder at <ExternalLink href="https://subroutine.com">Subroutine</ExternalLink>.
+          My name is Greg Pstrucha. I'm an engineer with extensive experience in
+          developer experience and performance work. Currently I am a cofounder
+          at{" "}
+          <ExternalLink href="https://subroutine.com">Subroutine</ExternalLink>.
         </p>
         <p>
-          Most recently I worked on <ExternalLink href="https://github.com/subroutinecom/workspace">workspace CLI</ExternalLink>, a very simple tool in style of dev containers aimed at
-          optimizing my own local development flow and parallelize coding agent execution in a fully sandboxed manner.
+          I spend a lot of time in AI agent land working on optimizing my flows
+          and speeding up my development cycle. Most recently I worked on{" "}
+          <ExternalLink href="https://github.com/Gricha/workspace">
+            workspace CLI
+          </ExternalLink>
+          . It's a tool that helps you stand up isolated coding agents in your
+          own homelab and access them remotely over Tailscale network. It
+          integrates with your favorite coding agent.
         </p>
         <p>
-          On the side I enjoy spending my time in the garage woodworking and tinkering with electronics.
+          On the side I enjoy spending my time in the garage woodworking and
+          tinkering with electronics.
         </p>
         <p>
           Previously I've worked at Robinhood where I led API Platform team.
-
-          Between 2013-2019 I worked at Facebook. There I've spent most of my time on Mobile Infrastructure team where I
-          have created <ExternalLink href="https://github.com/facebook/FBRetainCycleDetector">FBRetainCycleDetector</ExternalLink>, and worked on performance of iOS startup time.
+          Between 2013-2019 I worked at Facebook. There I've spent most of my
+          time on Mobile Infrastructure team where I have created{" "}
+          <ExternalLink href="https://github.com/facebook/FBRetainCycleDetector">
+            FBRetainCycleDetector
+          </ExternalLink>
+          , and worked on performance of iOS startup time.
         </p>
       </div>
 
@@ -64,8 +77,11 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         {blogPosts.map((post, index) => {
           const isExternal = post.external;
           const isInternalPage = post.path;
-          const commonClassName = "group flex items-baseline text-xs py-3 px-0 transition-all duration-200 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/20 cursor-pointer border-l-2 border-transparent hover:border-emerald-500 hover:pl-3";
-          const commonStyle = { animation: `fadeInUp 0.5s ease-out ${index * 0.1}s backwards` };
+          const commonClassName =
+            "group flex items-baseline text-xs py-3 px-0 transition-all duration-200 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/20 cursor-pointer border-l-2 border-transparent hover:border-emerald-500 hover:pl-3";
+          const commonStyle = {
+            animation: `fadeInUp 0.5s ease-out ${index * 0.1}s backwards`,
+          };
 
           if (isExternal) {
             return (
@@ -82,7 +98,11 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                 </span>
                 <span className="text-gray-800 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors duration-200 text-sm">
                   {post.title}
-                  <svg className="inline-block w-3 h-3 ml-1 opacity-40 group-hover:opacity-100 transition-opacity" fill="currentColor" viewBox="0 0 20 20">
+                  <svg
+                    className="inline-block w-3 h-3 ml-1 opacity-40 group-hover:opacity-100 transition-opacity"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
                     <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
                     <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
                   </svg>
