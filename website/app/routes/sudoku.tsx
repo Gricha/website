@@ -98,19 +98,19 @@ export default function Sudoku() {
               <span className="text-gray-500 dark:text-gray-500">Navigate grid</span>
             </div>
             <div className="flex gap-3">
-              <span className="text-gray-900 dark:text-gray-100 font-medium min-w-[80px]">X</span>
+              <span className="text-gray-900 dark:text-gray-100 font-medium min-w-[80px]">Z</span>
               <span className="text-gray-500 dark:text-gray-500">Cycle numbers 1-9</span>
             </div>
             <div className="flex gap-3">
-              <span className="text-gray-900 dark:text-gray-100 font-medium min-w-[80px]">Z</span>
+              <span className="text-gray-900 dark:text-gray-100 font-medium min-w-[80px]">X</span>
               <span className="text-gray-500 dark:text-gray-500">Clear cell</span>
             </div>
             <div className="flex gap-3">
-              <span className="text-gray-900 dark:text-gray-100 font-medium min-w-[80px]">A + Z</span>
+              <span className="text-gray-900 dark:text-gray-100 font-medium min-w-[80px]">Q + X</span>
               <span className="text-gray-500 dark:text-gray-500">Undo</span>
             </div>
             <div className="flex gap-3">
-              <span className="text-gray-900 dark:text-gray-100 font-medium min-w-[80px]">S + Z</span>
+              <span className="text-gray-900 dark:text-gray-100 font-medium min-w-[80px]">E + X</span>
               <span className="text-gray-500 dark:text-gray-500">Redo</span>
             </div>
             <div className="flex gap-3">
@@ -118,8 +118,8 @@ export default function Sudoku() {
               <span className="text-gray-500 dark:text-gray-500">Pause</span>
             </div>
             <div className="flex gap-3">
-              <span className="text-gray-900 dark:text-gray-100 font-medium min-w-[80px]">Shift</span>
-              <span className="text-gray-500 dark:text-gray-500">Toggle music</span>
+              <span className="text-gray-900 dark:text-gray-100 font-medium min-w-[80px]">V</span>
+              <span className="text-gray-500 dark:text-gray-500">Toggle pencil mode</span>
             </div>
           </div>
         </div>
