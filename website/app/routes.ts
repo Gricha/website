@@ -8,6 +8,7 @@ import {
 export default [
   // Full-screen routes (no site layout)
   route("happyholidays/terminal", "routes/happyholidays.terminal.tsx"),
+  route("sudoku", "routes/sudoku.tsx"),
 
   // API routes
   route("api/game", "routes/api.game.tsx"),

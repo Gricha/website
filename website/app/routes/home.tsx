@@ -35,8 +35,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         /> */}
         <p>
           My name is Greg Pstrucha. I'm an engineer with extensive experience in
-          developer experience and performance work. Currently I am a cofounder
-          at{" "}
+          developer experience and performance work. I am a cofounder at{" "}
           <ExternalLink href="https://subroutine.com">Subroutine</ExternalLink>.
         </p>
         <p>
