@@ -20,6 +20,14 @@ interface Project {
 
 const projects: Project[] = [
   {
+    name: "perry",
+    description:
+      "Self-hosted development sandboxes you can access remotely. A daemon that orchestrates isolated dev environments with pre-installed coding agents, accessible over Tailscale from CLI, web, or mobile.",
+    github: "https://github.com/Gricha/perry",
+    tech: ["TypeScript", "Docker", "Tailscale"],
+    year: "2026",
+  },
+  {
     name: "workspace",
     description:
       "A simple tool in the style of dev containers for optimizing local development flow and parallelizing coding agent execution in a fully sandboxed manner.",
