@@ -39,14 +39,14 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           <ExternalLink href="https://subroutine.com">Subroutine</ExternalLink>.
         </p>
         <p>
-          I spend a lot of time in AI agent land working on optimizing my flows
-          and speeding up my development cycle. Most recently I've been working on{" "}
+          I use coding agents daily and write about what I've learned about
+          getting better output out of them. Most recently
+          I've been working on{" "}
           <ExternalLink href="https://github.com/Gricha/perry">
             perry
           </ExternalLink>
-          , self-hosted development sandboxes you can access remotely. It orchestrates
-          isolated dev environments with pre-installed coding agents, accessible over
-          Tailscale from CLI, web, or mobile.
+          , self-hosted development sandboxes you can access remotely, primed
+          for coding agents. Accessible over Tailscale from CLI, web, or mobile.
         </p>
         <p>
           On the side I enjoy spending my time in the garage woodworking and
