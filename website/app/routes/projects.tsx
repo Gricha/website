@@ -28,14 +28,6 @@ const projects: Project[] = [
     year: "2026",
   },
   {
-    name: "workspace",
-    description:
-      "A simple tool in the style of dev containers for optimizing local development flow and parallelizing coding agent execution in a fully sandboxed manner.",
-    github: "https://github.com/subroutinecom/workspace",
-    tech: ["Go", "Docker"],
-    year: "2025",
-  },
-  {
     name: "FBRetainCycleDetector",
     description:
       "A runtime library for detecting retain cycles in iOS applications. Helps find memory leaks caused by reference cycles in Objective-C code.",
@@ -50,8 +42,8 @@ const toys: Project[] = [
     name: "Sudoku GBA",
     description: (
       <>
-        A Sudoku game for Game Boy Advance, built with Rust and Claude.
-        Features 700 puzzles, SRAM saves, and{" "}
+        A Sudoku game for Game Boy Advance, built with Rust and Claude. Features
+        700 puzzles, SRAM saves, and{" "}
         <a
           href="/sudoku/claude_ambient_masterpiece.wav"
           className="text-emerald-600 dark:text-emerald-400 hover:underline"
