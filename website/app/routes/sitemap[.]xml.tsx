@@ -1,8 +1,8 @@
 import type { LoaderFunctionArgs } from 'react-router';
-import { getAllPosts } from '~/utils/posts.server';
+import { getListedPosts } from '~/utils/posts.server';
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const posts = await getAllPosts();
+  const posts = await getListedPosts();
   const siteUrl = new URL(request.url).origin;
 
   // Separate posts by type

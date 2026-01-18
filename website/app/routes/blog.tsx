@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import type { Route } from "./+types/blog";
-import { getAllPosts } from "../utils/posts.server";
+import { getListedPosts } from "../utils/posts.server";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -10,7 +10,7 @@ export function meta({ }: Route.MetaArgs) {
 }
 
 export async function loader() {
-  const posts = await getAllPosts();
+  const posts = await getListedPosts();
   return { posts };
 }
 

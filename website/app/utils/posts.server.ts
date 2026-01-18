@@ -11,6 +11,7 @@ export interface BlogPost {
   content: string;
   external?: string;
   path?: string; // For internal non-blog pages (e.g., /happyholidays)
+  unlisted?: boolean; // Hidden from blog listing but accessible via direct URL
 }
 
 const postsDirectory = path.join(process.cwd(), 'posts');
@@ -33,6 +34,7 @@ export async function getAllPosts(): Promise<BlogPost[]> {
         author: data.author,
         excerpt: data.excerpt,
         content, // Keep as raw markdown
+        unlisted: data.unlisted ?? false,
       };
     });
 
@@ -74,6 +76,12 @@ export async function getAllPosts(): Promise<BlogPost[]> {
   return [...markdownPosts, ...specialPosts].sort(
     (a, b) => parseDate(b.date) - parseDate(a.date)
   );
+}
+
+// Get only listed posts (for blog index, sitemap, etc.)
+export async function getListedPosts(): Promise<BlogPost[]> {
+  const posts = await getAllPosts();
+  return posts.filter(post => !post.unlisted);
 }
 
 export async function getPostBySlug(slug: string): Promise<BlogPost | undefined> {

@@ -1,9 +1,9 @@
 import { Feed } from 'feed';
-import { getAllPosts } from '~/utils/posts.server';
+import { getListedPosts } from '~/utils/posts.server';
 import type { LoaderFunctionArgs } from 'react-router';
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const posts = await getAllPosts();
+  const posts = await getListedPosts();
   const siteUrl = new URL(request.url).origin;
 
   const feed = new Feed({
