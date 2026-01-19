@@ -4,7 +4,7 @@ import type { LoaderFunctionArgs } from 'react-router';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const posts = await getAllPosts();
-  const siteUrl = new URL(request.url).origin;
+  const siteUrl = process.env.SITE_URL || 'https://gricha.dev';
 
   const feed = new Feed({
     title: "Greg Pstrucha's Blog",
