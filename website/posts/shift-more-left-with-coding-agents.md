@@ -2,7 +2,7 @@
 title: "Shift more left with coding agents"
 date: "January 18, 2026"
 author: "Greg Pstrucha"
-unlisted: true
+unlisted: false
 ---
 
 I use coding agents almost exclusively, and they still produce a lot of slop. I don't mind any of that for prototyping but shipping good-quality software is still *hard*.
