@@ -1,3 +1,9 @@
+---
+title: "Skills, security and dotagents"
+date: "February 17, 2026"
+author: "Greg Pstrucha"
+---
+
 # Skills, security and dotagents
 
 [Skills](https://agentskills.io/home) have become a common building block for the agentic workflows. Most (if not all?) coding agent harnesses support them. Skills are pretty simple - they are meant to provide your coding agent with set of instructions in form of an markdown file. The agents can load them lazily when needed to perform a task at hand (or more commonly when you ask them to). You can see some of the examples of skills [we use at Sentry](https://github.com/getsentry/skills).
