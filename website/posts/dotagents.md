@@ -4,9 +4,15 @@ date: "February 17, 2026"
 author: "Greg Pstrucha"
 ---
 
-[Skills](https://agentskills.io/home) have become a common building block for agentic workflows. Most (if not all?) coding agent harnesses support them. I treat them very much as dependencies within the system. As they are capable of introducing new behaviors and whispering into an agent's ear, they should be vetted and kept up to date just as you should do with your code dependencies.
+[Skills](https://agentskills.io/home) have become a common building block for agentic workflows. Most (if not all?) coding agent harnesses support them. I treat them very much as dependencies within the system.
 
-We've built a tool at Sentry called [dotagents](https://github.com/getsentry/dotagents) that is meant to manage the tools that agents use across different agent harnesses.
+Managing agent skills across tools and repositories is a copy-paste nightmare. We've built a tool called [dotagents](https://github.com/getsentry/dotagents) that treats them as versioned, lock-filed dependencies they actually are.
+
+`dotagents` will:
+
+- Help you manage versions and update skills, treating them like dependencies
+- Deduplicate configuration for skills/mcp/hooks across agent harnesses
+- Define trusted sources to reduce a risk of pulling random skills from untrusted sources.
 
 You can start using `dotagents` by either installing it globally:
 
