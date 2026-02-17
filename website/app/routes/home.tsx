@@ -35,13 +35,12 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         /> */}
         <p>
           My name is Greg Pstrucha. I'm an engineer with extensive experience in
-          developer experience and performance work. I am a cofounder at{" "}
-          <ExternalLink href="https://subroutine.com">Subroutine</ExternalLink>.
+          developer experience and performance work. I currently work at
+          Sentry's AI/ML team.
         </p>
         <p>
           I use coding agents daily and write about what I've learned about
-          getting better output out of them. Most recently
-          I've been working on{" "}
+          getting better output out of them. Most recently I've been working on{" "}
           <ExternalLink href="https://github.com/Gricha/perry">
             perry
           </ExternalLink>
@@ -53,9 +52,11 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           tinkering with electronics.
         </p>
         <p>
-          Previously I've worked at Robinhood where I led API Platform team.
-          Between 2013-2019 I worked at Facebook. There I've spent most of my
-          time on Mobile Infrastructure team where I have created{" "}
+          Previously I've cofounded Subroutine, where we worked on AI related
+          development and 3rd party integration tools. Prior to that I've worked
+          at Robinhood where I led API Platform team. Between 2013-2019 I worked
+          at Facebook. There I've spent most of my time on Mobile Infrastructure
+          team where I have created{" "}
           <ExternalLink href="https://github.com/facebook/FBRetainCycleDetector">
             FBRetainCycleDetector
           </ExternalLink>
