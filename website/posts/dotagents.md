@@ -4,8 +4,6 @@ date: "February 17, 2026"
 author: "Greg Pstrucha"
 ---
 
-# Skills, security and dotagents
-
 [Skills](https://agentskills.io/home) have become a common building block for the agentic workflows. Most (if not all?) coding agent harnesses support them. Skills are pretty simple - they are meant to provide your coding agent with set of instructions in form of an markdown file. The agents can load them lazily when needed to perform a task at hand (or more commonly when you ask them to). You can see some of the examples of skills [we use at Sentry](https://github.com/getsentry/skills).
 
 I treat them very much as dependencies within the system. As they are capable of introducing new behaviors and whispering into agents ear, the should be vetted and kept up to date just as you should do with your code dependencies.
@@ -22,7 +20,7 @@ or using them over npx. Set up by running
 
 It will take you through an interactive wizard that will help set up your initial agents.toml file. It will look something like this:
 
-```
+```toml
 version = 1
 gitignore = false
 agents = ["claude", "cursor"]
@@ -56,7 +54,7 @@ The point is - it's very hard - the attackers have a new vector that can get you
 
 `dotagents` allows you to define trusted sources:
 
-```
+```toml
 version = 1
 agents = ["claude", "cursor"]
 
@@ -71,7 +69,7 @@ In this example, if a developer tries to add a skill from other sources, they sh
 
 We have experimental and limited support for MCP and Hooks management. MCP support should work across our set of supported agents and inject MCP configurations to the respective spots in the configuration files. Similar is true of hooks, but as not all agents support hooks (or they diverge too much), the utility is a bit more limited as of now. Here's an example of defining MCP server with `dotagents`:
 
-```
+```toml
 [[mcp]]
 name = "sentry"
 url = "https://mcp.sentry.dev/mcp"
