@@ -78,3 +78,7 @@ We have experimental and limited support for MCP and Hooks management. MCP suppo
 name = "sentry"
 url = "https://mcp.sentry.dev/mcp"
 ```
+
+# Feedback welcome
+
+`dotagents` is still early and we'd love to hear what you think. Tag me on [Twitter/X](https://x.com/gricha_91) or [open an issue](https://github.com/getsentry/dotagents/issues) on the repo.
